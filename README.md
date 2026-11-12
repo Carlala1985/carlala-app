@@ -18,7 +18,7 @@ The presentation site (carlala.eu) is a separate static site on cyberfolks. This
 | Language | Romanian or English, chosen in the header (remembered per user); defaults to the browser language. |
 
 ### Pricing rule
-Every full 24 hours costs the daily price; leftover hours cost the hourly price, capped at one more day. Carlala keeps **25 %** of each rental from the owner's side (`PLATFORM_FEE_RATE` in `src/lib/pricing.ts`, a placeholder to confirm). All times are Bucharest time; money is stored in bani.
+Every full 24 hours costs the daily price; leftover hours cost the hourly price, capped at one more day. Carlala keeps **25 %** of each rental from the owner's side (`PLATFORM_FEE_RATE` in `src/lib/pricing.ts`; both rules confirmed in November 2026). All times are Bucharest time; money is stored in bani.
 
 ### Not built yet
 ID and driving-licence checks, damage reports with photos, owner payouts (Stripe Connect), in-app messages, email notifications, refunds, Terms of use. The privacy policy on carlala.eu must be updated before real users sign up here, because accounts, phone numbers and payments are new kinds of data.

@@ -1,4 +1,4 @@
-/** Carlala's service fee, taken from the owner's side. Placeholder until confirmed. */
+/** Carlala's service fee: 25 % of each rental, taken from the owner's side (confirmed by GUFFROY SRL, Nov 2026). */
 export const PLATFORM_FEE_RATE = 0.25;
 export const MIN_HOURS = 1;
 export const MAX_DAYS = 30;
