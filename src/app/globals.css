@@ -1,26 +1,42 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Carlala brand: plum ink, coral accent, warm blush ground. Single light theme by design. */
+@theme {
+  --color-ink: #24163a;
+  --color-coral: #ff6a4d;
+  --color-coral-deep: #c7361c; /* coral for text on light backgrounds (passes contrast) */
+  --color-blush: #fff4ef;
+  --color-peach: #ffded3;
+  --color-lilac: #ebe3fb;
+  --color-muted: #675a74;
+  --color-line: #efd9d0;
+  --color-ok: #1f7a4d;
+  --color-warn: #a15c00;
+  --color-err: #b42318;
+  --font-sans: var(--font-bricolage), "Arial Rounded MT Bold", ui-rounded, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-card: 22px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+html { color-scheme: light; }
+body { background: var(--color-blush); color: var(--color-ink); -webkit-font-smoothing: antialiased; }
+h1, h2, h3 { letter-spacing: -0.025em; text-wrap: balance; }
+:focus-visible { outline: 3px solid var(--color-coral); outline-offset: 3px; border-radius: 8px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
-}
+@utility wrap { @apply mx-auto w-full max-w-[1160px]; padding-left: max(20px, env(safe-area-inset-left, 0px)); padding-right: max(20px, env(safe-area-inset-right, 0px)); }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-[15px] font-semibold leading-none transition-transform hover:-translate-y-px disabled:opacity-50 disabled:hover:translate-y-0 cursor-pointer; }
+@utility btn-ink { @apply btn bg-ink text-blush; }
+@utility btn-coral { @apply btn bg-coral text-ink; }
+@utility btn-ghost { @apply btn bg-transparent text-ink ring-2 ring-inset ring-ink; }
+@utility btn-sm { @apply px-4 py-2.5 text-sm; }
+@utility card { @apply rounded-[var(--radius-card)] bg-white ring-1 ring-line; }
+@utility label { @apply mb-1.5 block text-sm font-semibold; }
+@utility hint { @apply mt-1 text-[13px] text-muted; }
+@utility input { @apply w-full rounded-xl border-2 border-line bg-blush px-3.5 py-3 text-base text-ink outline-none focus:border-ink; }
+@utility eyebrow { @apply inline-flex items-center gap-2 text-[13px] font-semibold uppercase tracking-[0.08em] text-muted;  &::before { content: ""; @apply size-2 rounded-full bg-coral; } }
+@utility pill { @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold; }
+@utility alert { @apply rounded-2xl px-4 py-3 text-[15px] font-medium; }
+@utility alert-ok { @apply alert bg-[#e3f4ea] text-ok; }
+@utility alert-err { @apply alert bg-[#fde8e6] text-err; }
+@utility alert-info { @apply alert bg-lilac text-ink; }
+@utility tnum { font-variant-numeric: tabular-nums; }

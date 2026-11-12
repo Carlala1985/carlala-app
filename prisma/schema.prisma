@@ -1,0 +1,139 @@
+// Carlala data model. Money is stored in bani (1 RON = 100 bani) as integers.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum Sector {
+  S1
+  S2
+  S3
+  S4
+  S5
+  S6
+  ILFOV
+}
+
+enum Transmission {
+  MANUAL
+  AUTOMATIC
+}
+
+enum Fuel {
+  PETROL
+  DIESEL
+  HYBRID
+  ELECTRIC
+  LPG
+}
+
+enum BookingStatus {
+  REQUESTED // renter asked, owner has not answered
+  ACCEPTED // owner accepted, waiting for payment
+  PAID // paid, trip confirmed
+  COMPLETED // trip ended
+  DECLINED // owner said no
+  CANCELLED // renter or owner cancelled
+  EXPIRED // not answered or not paid in time
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String
+  phone        String?
+  role         Role     @default(USER)
+  locale       String   @default("ro")
+  suspended    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  cars            Car[]
+  bookingsAsRenter Booking[] @relation("renter")
+  reviewsWritten  Review[]  @relation("author")
+  reviewsReceived Review[]  @relation("subject")
+}
+
+model Car {
+  id            String       @id @default(cuid())
+  ownerId       String
+  owner         User         @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  make          String
+  model         String
+  year          Int
+  seats         Int
+  transmission  Transmission
+  fuel          Fuel
+  sector        Sector
+  neighbourhood String
+  description   String       @default("")
+  pricePerHour  Int // bani
+  pricePerDay   Int // bani
+  active        Boolean      @default(true) // owner can pause the listing
+  blocked       Boolean      @default(false) // admin can hide the listing
+  createdAt     DateTime     @default(now())
+
+  photos   CarPhoto[]
+  bookings Booking[]
+
+  @@index([sector, active, blocked])
+}
+
+model CarPhoto {
+  id        String   @id @default(cuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  url       String
+  position  Int      @default(0)
+  createdAt DateTime @default(now())
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  carId           String
+  car             Car           @relation(fields: [carId], references: [id], onDelete: Cascade)
+  renterId        String
+  renter          User          @relation("renter", fields: [renterId], references: [id], onDelete: Cascade)
+  start           DateTime
+  end             DateTime
+  status          BookingStatus @default(REQUESTED)
+  totalPrice      Int // bani, what the renter pays
+  platformFee     Int // bani, Carlala's share
+  ownerEarnings   Int // bani, totalPrice - platformFee
+  message         String        @default("")
+  stripeSessionId String?       @unique
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  reviews Review[]
+
+  @@index([carId, start, end])
+  @@index([renterId])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  bookingId String
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  authorId  String
+  author    User     @relation("author", fields: [authorId], references: [id], onDelete: Cascade)
+  subjectId String
+  subject   User     @relation("subject", fields: [subjectId], references: [id], onDelete: Cascade)
+  rating    Int // 1 to 5
+  comment   String   @default("")
+  createdAt DateTime @default(now())
+
+  @@unique([bookingId, authorId])
+}

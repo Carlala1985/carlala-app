@@ -1,0 +1,87 @@
+const en = {
+  meta: { title: "Carlala · The car next door, by the hour", description: "Rent cars from your neighbours in Bucharest, or earn from the car you barely use." },
+  nav: { find: "Find a car", list: "List your car", myCars: "My cars", trips: "My trips", requests: "Requests", admin: "Admin", login: "Log in", signup: "Sign up", logout: "Log out", menu: "Account" },
+  home: {
+    eyebrow: "Bucharest",
+    h1: "The car next door, by the hour.",
+    sub: "Rent a car parked near you, from someone in your neighbourhood. Book in two minutes, insured on every trip.",
+    where: "Where", from: "From", until: "Until", anySector: "All of Bucharest", search: "Find a car",
+    featured: "Cars near you", seeAll: "See all cars",
+    howTitle: "How it works",
+    how1h: "Find a car nearby", how1p: "Search by sector and time. See photos, price and reviews.",
+    how2h: "Request and pay", how2p: "The owner accepts your request, then you pay securely online.",
+    how3h: "Meet and drive", how3p: "Pick up the keys from the owner and bring the car back to the same street.",
+    ownerTitle: "Your car could earn while it's parked.", ownerP: "List it in ten minutes. You choose the price, the dates and who drives it.", ownerCta: "List your car",
+  },
+  search: {
+    title: "Cars in Bucharest", results: "{n} cars available", resultsOne: "1 car available",
+    none: "No cars match your search.", noneHint: "Try another sector, different times, or remove a filter.",
+    transmission: "Gearbox", fuel: "Fuel", any: "Any", apply: "Search", perHour: "/ hour", perDay: "/ day",
+    datesHint: "Add dates to see only cars that are free and the total price.", totalFor: "{price} total",
+  },
+  car: {
+    about: "About this car", seats: "{n} seats", year: "Year", location: "Pick-up area", owner: "Owner", memberSince: "On Carlala since {date}",
+    reviews: "Reviews", noReviews: "No reviews yet.", bookTitle: "Book this car", start: "Pick-up", end: "Return",
+    breakdownDays: "{n} × day", breakdownHours: "{n} × hour", total: "Total", feeNote: "Insurance and Carlala's service are included.",
+    message: "Message to the owner (optional)", messagePlaceholder: "Hi! I need the car for a weekend trip to Brașov.",
+    request: "Request to book", loginToBook: "Log in to book", ownCar: "This is your car.", paused: "This car isn't available right now.",
+    requestSent: "Request sent. You'll be able to pay as soon as the owner accepts.", notFound: "This car doesn't exist or was removed.",
+    perHour: "per hour", perDay: "per day", updatePrice: "Update price",
+  },
+  auth: {
+    loginTitle: "Log in", signupTitle: "Create your account", email: "Email", password: "Password", name: "Full name", phone: "Phone (optional)",
+    login: "Log in", signup: "Create account", noAccount: "New to Carlala?", haveAccount: "Already have an account?",
+    errInvalid: "Email or password is wrong.", errExists: "An account with this email already exists. Log in instead.",
+    errPassword: "Use at least 8 characters for your password.", errName: "Enter your name.", errEmail: "Enter a valid email address.",
+    terms: "By creating an account you agree to our privacy policy.", suspended: "This account is suspended. Write to hello@carlala.eu.",
+  },
+  myCars: {
+    title: "My cars", add: "Add a car", empty: "You haven't listed a car yet.", emptyHint: "List your car and start earning when it's parked.",
+    edit: "Edit", pause: "Pause listing", resume: "Show listing", paused: "Paused", live: "Live", blocked: "Hidden by Carlala",
+    view: "View listing",
+  },
+  carForm: {
+    newTitle: "List your car", editTitle: "Edit your car", make: "Make", model: "Model", year: "Year", seats: "Seats",
+    transmission: "Gearbox", fuel: "Fuel", sector: "Sector", neighbourhood: "Neighbourhood", neighbourhoodHint: "e.g. Floreasca, Titan, Drumul Taberei",
+    description: "Description", descriptionHint: "Condition, what's included (child seat, chargers), pick-up instructions.",
+    pricePerHour: "Price per hour (RON)", pricePerDay: "Price per day (RON)", priceHint: "The daily price should be lower than 24 hours at the hourly price.",
+    photos: "Photos", photosHint: "Up to 6 photos, JPG or PNG, max 5 MB each.", removePhoto: "Remove",
+    save: "Save changes", create: "Publish listing", saved: "Saved.",
+    errRequired: "Fill in all required fields.", errPrice: "Prices must be between 1 and 5,000 RON.", errYear: "Enter a year between 1990 and next year.",
+    errPhoto: "Photos must be JPG, PNG or WebP and smaller than 5 MB.", errDayPrice: "The daily price must be at least the hourly price.",
+  },
+  trips: {
+    title: "My trips", empty: "You haven't booked a car yet.", emptyCta: "Find a car",
+    pay: "Pay {price}", cancel: "Cancel", review: "Review the owner", reviewed: "Reviewed", with: "Owner: {name}",
+    waiting: "Waiting for the owner to answer.", acceptedHint: "Accepted! Pay to confirm the trip.",
+  },
+  requests: {
+    title: "Requests for my cars", empty: "No requests yet.", accept: "Accept", decline: "Decline", complete: "Mark trip as finished",
+    from: "From {name}", earnings: "You earn {price}", review: "Review the renter", reviewed: "Reviewed", conflict: "This overlaps a trip you already accepted.",
+  },
+  status: { REQUESTED: "Requested", ACCEPTED: "Accepted, waiting for payment", PAID: "Confirmed", COMPLETED: "Finished", DECLINED: "Declined", CANCELLED: "Cancelled", EXPIRED: "Expired" },
+  review: { title: "How did it go?", rating: "Rating", comment: "Comment (optional)", submit: "Publish review", stars: "{n} out of 5" },
+  pay: {
+    simTitle: "Test payment", simText: "Stripe isn't connected yet, so this page simulates the payment. No money moves.",
+    simPay: "Simulate successful payment", simCancel: "Back to my trips", success: "Payment received. Your trip is confirmed.",
+    cancelled: "Payment cancelled. You can try again from My trips.", failed: "We couldn't start the payment. Try again in a minute.",
+    unavailable: "Sorry, the car was booked by someone else for these times.",
+  },
+  admin: {
+    title: "Admin", users: "Users", cars: "Cars", bookings: "Bookings", revenue: "Carlala fees (paid trips)",
+    suspend: "Suspend", unsuspend: "Reactivate", block: "Hide", unblock: "Show", owner: "Owner", renter: "Renter", status: "Status", when: "When", total: "Total",
+  },
+  errors: {
+    end_before_start: "The return time must be after the pick-up time.", too_short: "The minimum rental is 1 hour.",
+    too_long: "The maximum rental is 30 days.", in_past: "The pick-up time is in the past.", unavailable: "The car is already booked for part of this time.",
+    generic: "Something went wrong. Try again.", forbidden: "You can't do that.", dates: "Choose a pick-up and a return time.",
+  },
+  footer: { tagline: "The car next door, by the hour.", privacy: "Privacy", cookies: "Cookies", contact: "hello@carlala.eu", company: "GUFFROY SRL · CUI 51319110" },
+  sectors: { S1: "Sector 1", S2: "Sector 2", S3: "Sector 3", S4: "Sector 4", S5: "Sector 5", S6: "Sector 6", ILFOV: "Ilfov" },
+  transmission: { MANUAL: "Manual", AUTOMATIC: "Automatic" },
+  fuel: { PETROL: "Petrol", DIESEL: "Diesel", HYBRID: "Hybrid", ELECTRIC: "Electric", LPG: "LPG" },
+  common: { back: "Back", save: "Save", cancel: "Cancel", language: "Language", example: "Example", required: "required" },
+};
+
+export default en;
+export type Dict = typeof en;
