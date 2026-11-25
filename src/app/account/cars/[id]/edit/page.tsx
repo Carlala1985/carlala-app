@@ -5,7 +5,7 @@ import { db } from "@/lib/db";
 import { CarForm } from "@/components/CarForm";
 import { deletePhoto, saveCar } from "@/app/actions/cars";
 import { carFormErrors, carOptions } from "@/lib/options";
-import { blobEnabled, MAX_PHOTOS } from "@/lib/uploads";
+import { blobMode, MAX_PHOTOS } from "@/lib/uploads";
 
 export default async function EditCar({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -29,7 +29,7 @@ export default async function EditCar({ params }: { params: Promise<{ id: string
         </ul>
       )}
       <CarForm action={saveCar} labels={t.carForm} errors={carFormErrors(t)} options={carOptions(t)}
-        photoRoom={MAX_PHOTOS - car.photos.length} directUpload={blobEnabled()}
+        photoRoom={MAX_PHOTOS - car.photos.length} uploadMode={blobMode()}
         car={{ ...car, pricePerHour: car.pricePerHour / 100, pricePerDay: car.pricePerDay / 100 }} />
     </div>
   );

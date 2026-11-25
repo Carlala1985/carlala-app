@@ -9,10 +9,10 @@ type CarValues = {
   sector?: string; neighbourhood?: string; description?: string; pricePerHour?: number; pricePerDay?: number;
 };
 
-export function CarForm({ action, car, labels, errors, options, photoRoom, directUpload }: {
+export function CarForm({ action, car, labels, errors, options, photoRoom, uploadMode }: {
   action: (s: CarFormState, f: FormData) => Promise<CarFormState>;
   car?: CarValues; labels: Record<string, string>; errors: Record<string, string>;
-  options: { transmission: Opt[]; fuel: Opt[]; sector: Opt[] }; photoRoom: number; directUpload: boolean;
+  options: { transmission: Opt[]; fuel: Opt[]; sector: Opt[] }; photoRoom: number; uploadMode: "token" | "oidc" | "none";
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
   const [uploading, setUploading] = useState(false);
@@ -58,7 +58,7 @@ export function CarForm({ action, car, labels, errors, options, photoRoom, direc
         {field("pricePerDay", labels.pricePerDay, { type: "number", min: 1, max: 5000, step: "1", inputMode: "decimal", defaultValue: c.pricePerDay ?? 150 })}
         <p className="hint sm:col-span-2 -mt-2">{labels.priceHint}</p>
       </div>
-      {photoRoom > 0 && <PhotoPicker max={photoRoom} direct={directUpload} labels={labels} onBusyChange={setUploading} />}
+      {photoRoom > 0 && <PhotoPicker max={photoRoom} mode={uploadMode} labels={labels} onBusyChange={setUploading} />}
       {state?.error && <p className="alert-err" role="alert">{errors[state.error] ?? errors.generic}</p>}
       <div><button className="btn-ink" disabled={pending || uploading}>{c.id ? labels.save : labels.create}</button></div>
     </form>

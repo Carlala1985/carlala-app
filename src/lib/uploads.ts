@@ -27,7 +27,20 @@ export function blobToken(): string | undefined {
   return undefined;
 }
 
-export const blobEnabled = () => !!blobToken();
+/**
+ * How photos reach Vercel Blob:
+ * - "token": classic stores, a *_READ_WRITE_TOKEN variable signs client upload tokens.
+ * - "oidc": newer stores, Vercel provides BLOB_STORE_ID and the deployment's OIDC identity; uploads use presigned URLs.
+ * - "none": local development, photos go to ./uploads.
+ */
+export type BlobMode = "token" | "oidc" | "none";
+export function blobMode(): BlobMode {
+  if (blobToken()) return "token";
+  if (process.env.BLOB_STORE_ID) return "oidc";
+  return "none";
+}
+
+export const blobEnabled = () => blobMode() !== "none";
 
 export function isValidPhoto(f: File) {
   return f.size > 0 && f.size <= MAX_PHOTO_BYTES && f.type in PHOTO_TYPES;

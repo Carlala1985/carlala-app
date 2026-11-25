@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { upload } from "@vercel/blob/client";
+import { upload, uploadPresigned } from "@vercel/blob/client";
 
 const MAX_SIDE = 1600;
 
@@ -23,8 +23,8 @@ async function shrink(file: File): Promise<Blob> {
 
 type Item = { key: string; preview: string; url?: string; failed?: boolean };
 
-export function PhotoPicker({ max, direct, labels, onBusyChange }: {
-  max: number; direct: boolean; labels: Record<string, string>; onBusyChange: (busy: boolean) => void;
+export function PhotoPicker({ max, mode, labels, onBusyChange }: {
+  max: number; mode: "token" | "oidc" | "none"; labels: Record<string, string>; onBusyChange: (busy: boolean) => void;
 }) {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState("");
@@ -43,8 +43,9 @@ export function PhotoPicker({ max, direct, labels, onBusyChange }: {
       try {
         const blob = await shrink(f);
         let url: string;
-        if (direct) {
-          url = (await upload(`cars/${key}.jpg`, blob, { access: "public", handleUploadUrl: "/api/upload", contentType: blob.type || "image/jpeg" })).url;
+        if (mode !== "none") {
+          const send = mode === "oidc" ? uploadPresigned : upload;
+          url = (await send(`cars/${key}.jpg`, blob, { access: "public", handleUploadUrl: "/api/upload", contentType: blob.type || "image/jpeg" })).url;
         } else {
           const fd = new FormData();
           fd.append("file", new File([blob], `${key}.jpg`, { type: blob.type || "image/jpeg" }));
