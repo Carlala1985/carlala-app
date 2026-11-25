@@ -14,7 +14,20 @@ export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
 export const MAX_PHOTOS = 6;
 export const PHOTO_TYPES: Record<string, string> = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" };
 
-export const blobEnabled = () => !!process.env.BLOB_READ_WRITE_TOKEN;
+/**
+ * The Vercel Blob read-write token. Vercel names it BLOB_READ_WRITE_TOKEN by default, but the
+ * "connect store" screen allows a custom prefix (e.g. CARLALA_READ_WRITE_TOKEN), so any
+ * *_READ_WRITE_TOKEN variable holding a Blob token is accepted.
+ */
+export function blobToken(): string | undefined {
+  if (process.env.BLOB_READ_WRITE_TOKEN) return process.env.BLOB_READ_WRITE_TOKEN;
+  for (const [k, v] of Object.entries(process.env)) {
+    if (k.endsWith("_READ_WRITE_TOKEN") && v?.startsWith("vercel_blob_rw_")) return v;
+  }
+  return undefined;
+}
+
+export const blobEnabled = () => !!blobToken();
 
 export function isValidPhoto(f: File) {
   return f.size > 0 && f.size <= MAX_PHOTO_BYTES && f.type in PHOTO_TYPES;

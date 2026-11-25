@@ -20,3 +20,17 @@ describe("isOurPhotoUrl", () => {
     expect(isOurPhotoUrl("https://evil.example/?public.blob.vercel-storage.com/cars/x.jpg")).toBe(false);
   });
 });
+
+describe("blobToken", () => {
+  afterEach(() => { delete process.env.CARLALA_READ_WRITE_TOKEN; delete process.env.OTHER_READ_WRITE_TOKEN; });
+  it("finds a Blob token stored under a custom prefix", async () => {
+    const { blobToken } = await import("../src/lib/uploads");
+    process.env.OTHER_READ_WRITE_TOKEN = "not-a-blob-token";
+    process.env.CARLALA_READ_WRITE_TOKEN = "vercel_blob_rw_abc_123";
+    expect(blobToken()).toBe("vercel_blob_rw_abc_123");
+  });
+  it("returns nothing when no Blob token exists", async () => {
+    const { blobToken } = await import("../src/lib/uploads");
+    expect(blobToken()).toBeUndefined();
+  });
+});

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { handleUpload, type HandleUploadBody } from "@vercel/blob/client";
 import { currentUser } from "@/lib/session";
-import { blobEnabled, isValidPhoto, MAX_PHOTO_BYTES, PHOTO_TYPES, savePhotoLocally } from "@/lib/uploads";
+import { blobEnabled, blobToken, isValidPhoto, MAX_PHOTO_BYTES, PHOTO_TYPES, savePhotoLocally } from "@/lib/uploads";
 
 /**
  * Production: issues short-lived Vercel Blob upload tokens to signed-in users (the browser then uploads directly).
@@ -12,6 +12,7 @@ export async function POST(req: Request) {
     try {
       const body = (await req.json()) as HandleUploadBody;
       const result = await handleUpload({
+        token: blobToken(),
         body,
         request: req,
         onBeforeGenerateToken: async (pathname) => {
@@ -32,4 +33,14 @@ export async function POST(req: Request) {
   const f = (await req.formData()).get("file");
   if (!(f instanceof File) || !isValidPhoto(f)) return NextResponse.json({ error: "invalid photo" }, { status: 400 });
   return NextResponse.json({ url: await savePhotoLocally(f) });
+}
+
+/** Safe status check: says whether photo storage is connected, never the token itself. */
+export async function GET() {
+  const vars = Object.keys(process.env).filter((k) => k.endsWith("_READ_WRITE_TOKEN"));
+  return NextResponse.json({
+    storage: blobEnabled() ? "connected" : process.env.VERCEL ? "missing" : "local-disk",
+    tokenVariables: vars,
+    environment: process.env.VERCEL_ENV ?? "local",
+  }, { headers: { "Cache-Control": "no-store" } });
 }
