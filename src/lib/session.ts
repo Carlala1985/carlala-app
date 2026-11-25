@@ -49,6 +49,11 @@ export async function requireUser(next?: string) {
   return user;
 }
 
+/** Emails listed in ADMIN_EMAILS (comma-separated) are admins. Lets the first admin exist without running a script. */
+export function isAdminEmail(email: string) {
+  return (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim().toLowerCase()).filter(Boolean).includes(email.toLowerCase());
+}
+
 export async function requireAdmin() {
   const user = await requireUser("/admin");
   if (user.role !== "ADMIN") redirect("/");

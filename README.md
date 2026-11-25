@@ -59,27 +59,19 @@ npm test
 
 ## Put it online (Vercel + Neon)
 
-1. **Code on GitHub.** Push this folder to a private GitHub repository.
-2. **Database on Neon.** Create a free project at neon.tech in the **EU (Frankfurt)** region. Copy the *pooled* connection string into `DATABASE_URL` and the *direct* one into `DIRECT_URL`.
-3. **App on Vercel.** Import the repository at vercel.com and choose **Frankfurt (fra1)** as the region. Add these environment variables:
+1. **Database on Neon.** In the Neon Console, open the project and click **Connect**. Copy the string with **Connection pooling on** (for `DATABASE_URL`) and the one with it **off** (for `DIRECT_URL`). Use the EU (Frankfurt) region.
+2. **App on Vercel.** **Add New → Project**, import `Carlala1985/carlala-app` from GitHub, and add these environment variables before the first deploy:
    - `DATABASE_URL`, `DIRECT_URL` from Neon
    - `SESSION_SECRET`: a random string of at least 32 characters
-   - `APP_URL`: `https://app.carlala.eu`
-   - `BLOB_READ_WRITE_TOKEN`: create a Blob store in Vercel (Storage tab) and connect it; Vercel fills this in
+   - `APP_URL`: `https://app.carlala.eu` (or the `….vercel.app` address until the domain is connected)
+   - `ADMIN_EMAILS`: `hello@carlala.eu` (whoever signs up or logs in with this address becomes admin)
    - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`: optional at first (see below)
-4. **Create the tables.** Run once against the Neon database from your computer, with `DATABASE_URL` and `DIRECT_URL` set to the Neon values:
+3. **Photos.** In the Vercel project, **Storage → Create → Blob**, then connect it to the project. Vercel adds `BLOB_READ_WRITE_TOKEN` itself. Redeploy afterwards.
+4. **Deploy.** Each deployment creates or updates the database tables automatically (`prisma migrate deploy` runs in the build). The app runs in Frankfurt (`vercel.json`).
+5. **First admin.** Open the site and sign up with `hello@carlala.eu`; that account is the admin.
+6. **Domain.** In Vercel, add the domain `app.carlala.eu`. Then in cPanel, open **Zone Editor**, choose **carlala.eu** and add a **CNAME** record: name `app`, value `cname.vercel-dns.com`. Do not change the existing `carlala.eu` A record.
 
-   ```bash
-   npm run db:migrate
-   ```
-
-   Then create only the admin account (no demo data):
-
-   ```bash
-   SEED_ONLY_ADMIN=1 SEED_ADMIN_PASSWORD='choose-a-strong-password' npm run db:seed
-   ```
-
-5. **Domain.** In Vercel, add the domain `app.carlala.eu`. Then in cPanel, open **Zone Editor**, choose **carlala.eu** and add a **CNAME** record: name `app`, value `cname.vercel-dns.com`. Do not change the existing `carlala.eu` A record.
+To build locally without touching a database, run `npm run build:local`.
 
 ## Stripe (test mode first)
 

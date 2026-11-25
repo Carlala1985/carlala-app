@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { db } from "@/lib/db";
-import { createSession, destroySession } from "@/lib/session";
+import { createSession, destroySession, isAdminEmail } from "@/lib/session";
 import { getLocale } from "@/lib/i18n";
 
 export type AuthState = { error?: string; values?: Record<string, string> } | undefined;
@@ -29,7 +29,7 @@ export async function signup(_: AuthState, formData: FormData): Promise<AuthStat
   const { name, email, password, phone } = parsed.data;
   if (await db.user.findUnique({ where: { email } })) return { error: "errExists", values };
   const user = await db.user.create({
-    data: { name, email, phone: phone || null, passwordHash: await bcrypt.hash(password, 10), locale: await getLocale() },
+    data: { name, email, phone: phone || null, passwordHash: await bcrypt.hash(password, 10), locale: await getLocale(), role: isAdminEmail(email) ? "ADMIN" : "USER" },
   });
   await createSession(user.id);
   redirect(safeNext(formData.get("next")));
@@ -41,6 +41,7 @@ export async function login(_: AuthState, formData: FormData): Promise<AuthState
   const user = await db.user.findUnique({ where: { email } });
   if (!user || !(await bcrypt.compare(password, user.passwordHash))) return { error: "errInvalid", values: { email } };
   if (user.suspended) return { error: "suspended", values: { email } };
+  if (user.role !== "ADMIN" && isAdminEmail(user.email)) await db.user.update({ where: { id: user.id }, data: { role: "ADMIN" } });
   await createSession(user.id);
   redirect(safeNext(formData.get("next")));
 }
