@@ -63,7 +63,7 @@ npm test
 2. **App on Vercel.** **Add New → Project**, import `Carlala1985/carlala-app` from GitHub, and add these environment variables before the first deploy:
    - `DATABASE_URL`, `DIRECT_URL` from Neon
    - `SESSION_SECRET`: a random string of at least 32 characters
-   - `APP_URL`: `https://app.carlala.eu` (or the `….vercel.app` address until the domain is connected)
+   - `APP_URL`: optional. If unset, the app uses the production domain Vercel provides (`app.carlala.eu` once connected, else `carlala-app.vercel.app`).
    - `ADMIN_EMAILS`: `hello@carlala.eu` (whoever signs up or logs in with this address becomes admin)
    - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`: optional at first (see below)
 3. **Photos.** In the Vercel project, **Storage → Create → Blob**, then connect it to the project. Vercel adds `BLOB_READ_WRITE_TOKEN` itself. Redeploy afterwards.
