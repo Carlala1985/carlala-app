@@ -7,6 +7,7 @@ import { formatDateTime } from "@/lib/time";
 import { StatusPill } from "@/components/StatusPill";
 import { ReviewForm } from "@/components/ReviewForm";
 import { acceptBooking, completeBooking, declineBooking } from "@/app/actions/bookings";
+import { displayName } from "@/lib/deletion";
 
 export default async function Requests({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const user = await requireUser("/account/requests");
@@ -33,7 +34,7 @@ export default async function Requests({ searchParams }: { searchParams: Promise
                   <h2 className="text-xl font-bold">{b.car.make} {b.car.model}</h2><StatusPill status={b.status} t={t} />
                 </div>
                 <p className="tnum text-[15px]">{formatDateTime(b.start, locale)} → {formatDateTime(b.end, locale)}</p>
-                <p className="text-sm text-muted">{fmt(t.requests.from, { name: b.renter.name })}{b.status === "PAID" && b.renter.phone ? ` · ${b.renter.phone}` : ""}</p>
+                <p className="text-sm text-muted">{fmt(t.requests.from, { name: displayName(b.renter, t.account.deletedUser) })}{b.status === "PAID" && b.renter.phone ? ` · ${b.renter.phone}` : ""}</p>
                 {b.message && <blockquote className="rounded-2xl bg-blush px-4 py-3 text-[15px]">“{b.message}”</blockquote>}
                 <p className="tnum font-semibold">{fmt(t.requests.earnings, { price: formatRon(b.ownerEarnings, locale) })} <span className="font-normal text-muted">/ {formatRon(b.totalPrice, locale)}</span></p>
                 <div className="mt-1 flex flex-wrap gap-2">

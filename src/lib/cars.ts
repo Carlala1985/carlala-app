@@ -13,7 +13,7 @@ export const isTransmission = (v: unknown): v is Transmission => TRANSMISSIONS.i
 export const isFuel = (v: unknown): v is Fuel => FUELS.includes(v as Fuel);
 
 /** Cars anyone can see: live, not hidden by an admin, owner not suspended. */
-export const publicCar: Prisma.CarWhereInput = { active: true, blocked: false, owner: { suspended: false } };
+export const publicCar: Prisma.CarWhereInput = { active: true, blocked: false, deletedAt: null, owner: { suspended: false, deletedAt: null } };
 
 export type SearchParams = { sector?: Sector; transmission?: Transmission; fuel?: Fuel; start?: Date; end?: Date };
 

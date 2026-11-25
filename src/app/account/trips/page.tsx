@@ -10,6 +10,7 @@ import { CarImage } from "@/components/CarCard";
 import { StatusPill } from "@/components/StatusPill";
 import { ReviewForm } from "@/components/ReviewForm";
 import { cancelBooking, payBooking } from "@/app/actions/bookings";
+import { displayName } from "@/lib/deletion";
 
 type Q = { sent?: string; payment?: string; session_id?: string };
 
@@ -56,7 +57,7 @@ export default async function Trips({ searchParams }: { searchParams: Promise<Q>
                     <h2 className="text-xl font-bold">{b.car.make} {b.car.model}</h2><StatusPill status={b.status} t={t} />
                   </div>
                   <p className="tnum text-[15px]">{formatDateTime(b.start, locale)} → {formatDateTime(b.end, locale)}</p>
-                  <p className="text-sm text-muted">{b.car.neighbourhood}, {t.sectors[b.car.sector]} · {fmt(t.trips.with, { name: b.car.owner.name.split(" ")[0] })}</p>
+                  <p className="text-sm text-muted">{b.car.neighbourhood}, {t.sectors[b.car.sector]} · {fmt(t.trips.with, { name: displayName(b.car.owner, t.account.deletedUser, true) })}</p>
                   <p className="tnum font-semibold">{formatRon(b.totalPrice, locale)}</p>
                   {b.status === "REQUESTED" && <p className="text-sm text-muted">{t.trips.waiting}</p>}
                   {b.status === "ACCEPTED" && <p className="text-sm font-semibold text-coral-deep">{t.trips.acceptedHint}</p>}

@@ -10,6 +10,7 @@ import { defaultRange, formatDateTime, parseLocal } from "@/lib/time";
 import { CarImage } from "@/components/CarCard";
 import { Stars } from "@/components/Stars";
 import { requestBooking } from "@/app/actions/bookings";
+import { displayName } from "@/lib/deletion";
 
 type Q = { start?: string; end?: string; error?: string };
 
@@ -24,7 +25,7 @@ export default async function CarPage({ params, searchParams }: { params: Promis
   });
   const isOwner = !!user && car?.ownerId === user.id;
   const isAdmin = user?.role === "ADMIN";
-  if (!car || ((car.blocked || car.owner.suspended) && !isOwner && !isAdmin)) notFound();
+  if (!car || car.deletedAt || ((car.blocked || car.owner.suspended) && !isOwner && !isAdmin)) notFound();
   const available = car.active && !car.blocked;
 
   const def = defaultRange();
@@ -78,7 +79,7 @@ export default async function CarPage({ params, searchParams }: { params: Promis
             <ul className="grid gap-3">
               {reviews.map((r) => (
                 <li key={r.id} className="card p-4">
-                  <div className="flex items-center justify-between gap-3"><b>{r.author.name.split(" ")[0]}</b><Stars value={r.rating} label={t.review.stars} /></div>
+                  <div className="flex items-center justify-between gap-3"><b>{displayName(r.author, t.account.deletedUser, true)}</b><Stars value={r.rating} label={t.review.stars} /></div>
                   {r.comment && <p className="mt-1 text-muted">{r.comment}</p>}
                 </li>
               ))}

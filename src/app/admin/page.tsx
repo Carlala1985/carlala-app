@@ -7,14 +7,18 @@ import { formatRon } from "@/lib/money";
 import { formatDateTime } from "@/lib/time";
 import { StatusPill } from "@/components/StatusPill";
 import { toggleBlock, toggleSuspend } from "@/app/actions/admin";
+import { adminDeleteCar, adminDeleteUser } from "@/app/actions/deletion";
+import { ConfirmDelete } from "@/components/ConfirmDelete";
+import { displayName } from "@/lib/deletion";
 
-export default async function Admin() {
+export default async function Admin({ searchParams }: { searchParams: Promise<{ deleted?: string; error?: string }> }) {
   const admin = await requireAdmin();
+  const { deleted, error } = await searchParams;
   const { t, locale } = await getDict();
   await settleBookings();
   const [users, cars, bookings, fees] = await Promise.all([
-    db.user.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { _count: { select: { cars: true, bookingsAsRenter: true } } } }),
-    db.car.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { owner: true } }),
+    db.user.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { _count: { select: { cars: true, bookingsAsRenter: true } } } }),
+    db.car.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { owner: true } }),
     db.booking.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { car: true, renter: true } }),
     db.booking.aggregate({ where: { status: { in: ["PAID", "COMPLETED"] } }, _sum: { platformFee: true } }),
   ]);
@@ -26,6 +30,8 @@ export default async function Admin() {
   return (
     <div className="wrap flex flex-col gap-10 py-10">
       <h1 className="text-4xl font-extrabold">{t.admin.title}</h1>
+      {deleted && <p className="alert-ok" role="status">{deleted === "car" ? t.admin.deletedCar : t.admin.deletedUser}</p>}
+      {error && <p className="alert-err" role="alert">{error === "car_has_trips" ? t.admin.carHasTrips : t.admin.userHasTrips}</p>}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {stat(t.admin.users, users.length)}{stat(t.admin.cars, cars.length)}{stat(t.admin.bookings, bookings.length)}
         {stat(t.admin.revenue, formatRon(fees._sum.platformFee ?? 0, locale))}
@@ -36,7 +42,7 @@ export default async function Admin() {
           <thead><tr><th className={th}>{t.admin.cars}</th><th className={th}>{t.admin.renter}</th><th className={th}>{t.admin.when}</th><th className={th}>{t.admin.status}</th><th className={`${th} text-right`}>{t.admin.total}</th></tr></thead>
           <tbody>{bookings.map((b) => (
             <tr key={b.id}><td className={td}><Link href={`/cars/${b.carId}`} className="font-semibold underline decoration-line underline-offset-4">{b.car.make} {b.car.model}</Link></td>
-              <td className={td}>{b.renter.name}<br /><span className="text-sm text-muted">{b.renter.email}</span></td>
+              <td className={td}>{displayName(b.renter, t.account.deletedUser)}<br /><span className="text-sm text-muted">{b.renter.email}</span></td>
               <td className={`${td} tnum`}>{formatDateTime(b.start, locale)}<br /><span className="text-sm text-muted">→ {formatDateTime(b.end, locale)}</span></td>
               <td className={td}><StatusPill status={b.status} t={t} /></td><td className={`${td} tnum text-right`}>{formatRon(b.totalPrice, locale)}</td></tr>
           ))}</tbody></table></div>
@@ -49,8 +55,9 @@ export default async function Admin() {
             <tr key={c.id}><td className={td}><Link href={`/cars/${c.id}`} className="font-semibold underline decoration-line underline-offset-4">{c.make} {c.model} {c.year}</Link>
               {c.blocked && <span className="pill ml-2 bg-[#fde8e6] text-err">{t.myCars.blocked}</span>}</td>
               <td className={td}>{c.owner.name}</td><td className={td}>{t.sectors[c.sector]}</td>
-              <td className={`${td} text-right`}><form action={toggleBlock}><input type="hidden" name="id" value={c.id} />
-                <button className="btn-ghost btn-sm">{c.blocked ? t.admin.unblock : t.admin.block}</button></form></td></tr>
+              <td className={`${td} text-right`}><div className="flex flex-wrap items-start justify-end gap-2"><form action={toggleBlock}><input type="hidden" name="id" value={c.id} />
+                <button className="btn-ghost btn-sm">{c.blocked ? t.admin.unblock : t.admin.block}</button></form>
+                <ConfirmDelete action={adminDeleteCar} fields={{ id: c.id }} cta={t.admin.deleteCar} text={t.admin.deleteCarText} confirm={t.admin.confirm} /></div></td></tr>
           ))}</tbody></table></div>
       </section>
 
@@ -60,8 +67,9 @@ export default async function Admin() {
           <tbody>{users.map((u) => (
             <tr key={u.id}><td className={td}>{u.name}{u.role === "ADMIN" && <span className="pill ml-2 bg-lilac">admin</span>}{u.suspended && <span className="pill ml-2 bg-[#fde8e6] text-err">{t.admin.suspend}</span>}</td>
               <td className={td}>{u.email}</td><td className={`${td} tnum text-right`}>{u._count.cars} / {u._count.bookingsAsRenter}</td>
-              <td className={`${td} text-right`}>{u.id !== admin.id && <form action={toggleSuspend}><input type="hidden" name="id" value={u.id} />
-                <button className="btn-ghost btn-sm">{u.suspended ? t.admin.unsuspend : t.admin.suspend}</button></form>}</td></tr>
+              <td className={`${td} text-right`}>{u.id !== admin.id && <div className="flex flex-wrap items-start justify-end gap-2"><form action={toggleSuspend}><input type="hidden" name="id" value={u.id} />
+                <button className="btn-ghost btn-sm">{u.suspended ? t.admin.unsuspend : t.admin.suspend}</button></form>
+                <ConfirmDelete action={adminDeleteUser} fields={{ id: u.id }} cta={t.admin.deleteUser} text={t.admin.deleteUserText} confirm={t.admin.confirm} /></div>}</td></tr>
           ))}</tbody></table></div>
       </section>
     </div>

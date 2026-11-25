@@ -36,7 +36,7 @@ export async function currentUser() {
     const { payload } = await jwtVerify(token, secret());
     if (!payload.sub) return null;
     const user = await db.user.findUnique({ where: { id: payload.sub } });
-    if (!user || user.suspended) return null;
+    if (!user || user.suspended || user.deletedAt) return null;
     return user;
   } catch {
     return null;

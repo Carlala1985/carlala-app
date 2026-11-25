@@ -6,6 +6,7 @@ import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { FUELS, SECTORS, TRANSMISSIONS } from "@/lib/cars";
 import { isOurPhotoUrl, MAX_PHOTOS } from "@/lib/uploads";
+import { removePhotoFiles } from "@/lib/deletion";
 import { toBani } from "@/lib/money";
 
 export type CarFormState = { error?: string } | undefined;
@@ -54,7 +55,7 @@ export async function saveCar(_: CarFormState, formData: FormData): Promise<CarF
   let carId: string;
   if (id) {
     const car = await db.car.findUnique({ where: { id }, include: { _count: { select: { photos: true } } } });
-    if (!car || car.ownerId !== user.id) return { error: "forbidden" };
+    if (!car || car.ownerId !== user.id || car.deletedAt) return { error: "forbidden" };
     await db.car.update({ where: { id }, data });
     carId = id;
     const room = MAX_PHOTOS - car._count.photos;
@@ -73,7 +74,7 @@ export async function saveCar(_: CarFormState, formData: FormData): Promise<CarF
 export async function toggleCarActive(formData: FormData) {
   const user = await requireUser();
   const car = await db.car.findUnique({ where: { id: String(formData.get("id")) } });
-  if (!car || car.ownerId !== user.id) return;
+  if (!car || car.ownerId !== user.id || car.deletedAt) return;
   await db.car.update({ where: { id: car.id }, data: { active: !car.active } });
   revalidatePath("/account/cars");
   revalidatePath("/cars");
@@ -84,5 +85,6 @@ export async function deletePhoto(formData: FormData) {
   const photo = await db.carPhoto.findUnique({ where: { id: String(formData.get("photoId")) }, include: { car: true } });
   if (!photo || photo.car.ownerId !== user.id) return;
   await db.carPhoto.delete({ where: { id: photo.id } });
+  await removePhotoFiles([photo.url]);
   revalidatePath(`/account/cars/${photo.carId}/edit`);
 }

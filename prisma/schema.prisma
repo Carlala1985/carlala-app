@@ -57,6 +57,7 @@ model User {
   role         Role     @default(USER)
   locale       String   @default("ro")
   suspended    Boolean  @default(false)
+  deletedAt    DateTime? // account deleted: personal data erased, row kept for bookings history
   createdAt    DateTime @default(now())
 
   cars            Car[]
@@ -82,6 +83,7 @@ model Car {
   pricePerDay   Int // bani
   active        Boolean      @default(true) // owner can pause the listing
   blocked       Boolean      @default(false) // admin can hide the listing
+  deletedAt     DateTime? // listing deleted: hidden everywhere, photos removed, row kept for bookings history
   createdAt     DateTime     @default(now())
 
   photos   CarPhoto[]

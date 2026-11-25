@@ -11,7 +11,7 @@ export default async function EditCar({ params }: { params: Promise<{ id: string
   const { id } = await params;
   const user = await requireUser(`/account/cars/${id}/edit`);
   const car = await db.car.findUnique({ where: { id }, include: { photos: { orderBy: { position: "asc" } } } });
-  if (!car || car.ownerId !== user.id) notFound();
+  if (!car || car.ownerId !== user.id || car.deletedAt) notFound();
   const { t } = await getDict();
   return (
     <div className="wrap max-w-[820px] py-10">

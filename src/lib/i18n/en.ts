@@ -1,6 +1,6 @@
 const en = {
   meta: { title: "Carlala · The car next door, by the hour", description: "Rent cars from your neighbours in Bucharest, or earn from the car you barely use." },
-  nav: { find: "Find a car", list: "List your car", myCars: "My cars", trips: "My trips", requests: "Requests", admin: "Admin", login: "Log in", signup: "Sign up", logout: "Log out", menu: "Account" },
+  nav: { account: "My account", find: "Find a car", list: "List your car", myCars: "My cars", trips: "My trips", requests: "Requests", admin: "Admin", login: "Log in", signup: "Sign up", logout: "Log out", menu: "Account" },
   home: {
     eyebrow: "Bucharest",
     h1: "The car next door, by the hour.",
@@ -35,10 +35,19 @@ const en = {
     errPassword: "Use at least 8 characters for your password.", errName: "Enter your name.", errEmail: "Enter a valid email address.",
     terms: "By creating an account you confirm you are 18 or older and have read our", privacyLink: "privacy policy", suspended: "This account is suspended. Write to hello@carlala.eu.",
   },
+  account: {
+    title: "My account", name: "Name", email: "Email", phone: "Phone", memberSince: "Member since",
+    deleteTitle: "Delete my account", deleteCta: "Delete my account", deleteConfirm: "Yes, delete my account",
+    deleteText: "This permanently erases your name, email and phone, deletes your cars and their photos, and cancels your pending requests. Past trips are kept without your name, as our privacy policy explains. You can't undo this.",
+    hasTrips: "You have a paid trip that hasn't ended yet, as a renter or as an owner. You can delete your account once it has finished.",
+    deleted: "Your account has been deleted. Thank you for trying Carlala.", deletedUser: "Deleted user", none: "Not given",
+  },
   myCars: {
     title: "My cars", add: "Add a car", empty: "You haven't listed a car yet.", emptyHint: "List your car and start earning when it's parked.",
     edit: "Edit", pause: "Pause listing", resume: "Show listing", paused: "Paused", live: "Live", blocked: "Hidden by Carlala",
-    view: "View listing",
+    view: "View listing", delete: "Delete", deleteConfirm: "Yes, delete this car",
+    deleteText: "The listing and its photos are removed and pending requests are declined. Past trips stay in the history. You can't undo this.",
+    deleted: "Car deleted.", hasTrips: "This car has a paid trip that hasn't ended yet. You can delete it once the trip has finished.",
   },
   carForm: {
     newTitle: "List your car", editTitle: "Edit your car", make: "Make", model: "Model", year: "Year", seats: "Seats",
@@ -70,6 +79,10 @@ const en = {
   },
   admin: {
     title: "Admin", users: "Users", cars: "Cars", bookings: "Bookings", revenue: "Carlala fees (paid trips)",
+    deleteUser: "Delete", deleteCar: "Delete", confirm: "Yes, delete",
+    deleteUserText: "Erases this person's name, email and phone, deletes their cars and cancels their pending requests. Booking history is kept anonymously.",
+    deleteCarText: "Removes the listing and its photos and declines pending requests. Booking history is kept.",
+    deletedCar: "Car deleted.", deletedUser: "Account deleted.", carHasTrips: "This car has a paid trip that hasn't ended yet.", userHasTrips: "This person has a paid trip that hasn't ended yet.",
     suspend: "Suspend", unsuspend: "Reactivate", block: "Hide", unblock: "Show", owner: "Owner", renter: "Renter", status: "Status", when: "When", total: "Total",
   },
   errors: {

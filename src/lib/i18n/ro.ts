@@ -2,7 +2,7 @@ import type { Dict } from "./en";
 
 const ro: Dict = {
   meta: { title: "Carlala · Mașina de lângă tine, cu ora", description: "Închiriază mașini de la vecinii tăi din București sau câștigă din mașina pe care o folosești rar." },
-  nav: { find: "Caută o mașină", list: "Listează-ți mașina", myCars: "Mașinile mele", trips: "Rezervările mele", requests: "Cereri", admin: "Admin", login: "Intră în cont", signup: "Creează cont", logout: "Ieși din cont", menu: "Cont" },
+  nav: { account: "Contul meu", find: "Caută o mașină", list: "Listează-ți mașina", myCars: "Mașinile mele", trips: "Rezervările mele", requests: "Cereri", admin: "Admin", login: "Intră în cont", signup: "Creează cont", logout: "Ieși din cont", menu: "Cont" },
   home: {
     eyebrow: "București",
     h1: "Mașina de lângă tine, cu ora.",
@@ -37,10 +37,19 @@ const ro: Dict = {
     errPassword: "Folosește cel puțin 8 caractere pentru parolă.", errName: "Introdu numele tău.", errEmail: "Introdu o adresă de email validă.",
     terms: "Prin crearea contului confirmi că ai cel puțin 18 ani și că ai citit", privacyLink: "politica de confidențialitate", suspended: "Acest cont este suspendat. Scrie-ne la hello@carlala.eu.",
   },
+  account: {
+    title: "Contul meu", name: "Nume", email: "Email", phone: "Telefon", memberSince: "Membru din",
+    deleteTitle: "Șterge-mi contul", deleteCta: "Șterge-mi contul", deleteConfirm: "Da, șterge-mi contul",
+    deleteText: "Această acțiune îți șterge definitiv numele, emailul și telefonul, îți șterge mașinile și pozele lor și îți anulează cererile în așteptare. Rezervările trecute rămân fără numele tău, așa cum explică politica de confidențialitate. Nu poți anula această acțiune.",
+    hasTrips: "Ai o rezervare plătită care nu s-a încheiat încă, ca șofer sau ca proprietar. Îți poți șterge contul după ce se încheie.",
+    deleted: "Contul tău a fost șters. Îți mulțumim că ai încercat Carlala.", deletedUser: "Utilizator șters", none: "Nu a fost completat",
+  },
   myCars: {
     title: "Mașinile mele", add: "Adaugă o mașină", empty: "Încă nu ai listat nicio mașină.", emptyHint: "Listează-ți mașina și câștigă cât stă parcată.",
     edit: "Modifică", pause: "Pune pe pauză", resume: "Afișează anunțul", paused: "Pe pauză", live: "Activ", blocked: "Ascuns de Carlala",
-    view: "Vezi anunțul",
+    view: "Vezi anunțul", delete: "Șterge", deleteConfirm: "Da, șterge mașina",
+    deleteText: "Anunțul și pozele sunt șterse, iar cererile în așteptare sunt refuzate. Rezervările trecute rămân în istoric. Nu poți anula această acțiune.",
+    deleted: "Mașina a fost ștearsă.", hasTrips: "Mașina are o rezervare plătită care nu s-a încheiat încă. O poți șterge după ce se încheie rezervarea.",
   },
   carForm: {
     newTitle: "Listează-ți mașina", editTitle: "Modifică mașina", make: "Marcă", model: "Model", year: "An", seats: "Locuri",
@@ -72,6 +81,10 @@ const ro: Dict = {
   },
   admin: {
     title: "Admin", users: "Utilizatori", cars: "Mașini", bookings: "Rezervări", revenue: "Comisioane Carlala (rezervări plătite)",
+    deleteUser: "Șterge", deleteCar: "Șterge", confirm: "Da, șterge",
+    deleteUserText: "Șterge numele, emailul și telefonul acestei persoane, îi șterge mașinile și îi anulează cererile în așteptare. Istoricul rezervărilor rămâne anonim.",
+    deleteCarText: "Șterge anunțul și pozele și refuză cererile în așteptare. Istoricul rezervărilor rămâne.",
+    deletedCar: "Mașina a fost ștearsă.", deletedUser: "Contul a fost șters.", carHasTrips: "Mașina are o rezervare plătită care nu s-a încheiat încă.", userHasTrips: "Persoana are o rezervare plătită care nu s-a încheiat încă.",
     suspend: "Suspendă", unsuspend: "Reactivează", block: "Ascunde", unblock: "Afișează", owner: "Proprietar", renter: "Șofer", status: "Stare", when: "Când", total: "Total",
   },
   errors: {

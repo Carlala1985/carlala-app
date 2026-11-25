@@ -39,6 +39,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   <Link href="/account/trips" className="hover:underline decoration-coral decoration-2 underline-offset-4">{t.nav.trips}</Link>
                   <Link href="/account/cars" className="hover:underline decoration-coral decoration-2 underline-offset-4">{t.nav.myCars}</Link>
                   <Link href="/account/requests" className="hover:underline decoration-coral decoration-2 underline-offset-4">{t.nav.requests}</Link>
+                  <Link href="/account" className="hover:underline decoration-coral decoration-2 underline-offset-4">{t.nav.account}</Link>
                   {user.role === "ADMIN" && <Link href="/admin" className="hover:underline decoration-coral decoration-2 underline-offset-4">{t.nav.admin}</Link>}
                 </>
               ) : (

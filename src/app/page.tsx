@@ -8,13 +8,15 @@ import { CarGlyph } from "@/components/Logo";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<{ account?: string }> }) {
+  const { account } = await searchParams;
   const { t, locale } = await getDict();
   const cars = await searchCars({}, 6);
   const defaults = defaultRange();
   const steps = [[t.home.how1h, t.home.how1p], [t.home.how2h, t.home.how2p], [t.home.how3h, t.home.how3p]];
   return (
     <>
+      {account === "deleted" && <div className="wrap pt-6"><p className="alert-ok" role="status">{t.account.deleted}</p></div>}
       <section className="wrap grid items-center gap-10 py-10 md:grid-cols-[1.1fr_1fr] md:py-16">
         <div className="flex min-w-0 flex-col gap-5">
           <span className="eyebrow">{t.home.eyebrow}</span>
