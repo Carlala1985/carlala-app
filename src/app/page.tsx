@@ -27,7 +27,7 @@ export default async function Home() {
         <div className="md:col-span-2"><SearchForm t={t} q={{}} defaults={defaults} /></div>
       </section>
 
-      <section className="wrap py-8">
+      {cars.length > 0 && <section className="wrap py-8">
         <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
           <h2 className="text-3xl font-extrabold">{t.home.featured}</h2>
           <Link href="/cars" className="font-semibold underline decoration-coral decoration-2 underline-offset-4">{t.home.seeAll}</Link>
@@ -35,7 +35,7 @@ export default async function Home() {
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {cars.map((c) => <CarCard key={c.id} car={c} t={t} locale={locale} />)}
         </div>
-      </section>
+      </section>}
 
       <section className="mt-12 bg-white py-16">
         <div className="wrap">
