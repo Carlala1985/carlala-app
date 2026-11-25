@@ -17,7 +17,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const { t, locale } = await getDict();
   await settleBookings();
   const [users, cars, bookings, fees] = await Promise.all([
-    db.user.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { _count: { select: { cars: true, bookingsAsRenter: true } } } }),
+    db.user.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { _count: { select: { cars: { where: { deletedAt: null } }, bookingsAsRenter: true } } } }),
     db.car.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { owner: true } }),
     db.booking.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { car: true, renter: true } }),
     db.booking.aggregate({ where: { status: { in: ["PAID", "COMPLETED"] } }, _sum: { platformFee: true } }),
