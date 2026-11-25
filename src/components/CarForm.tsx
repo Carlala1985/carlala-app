@@ -1,5 +1,6 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import { PhotoPicker } from "./PhotoPicker";
 import type { CarFormState } from "@/app/actions/cars";
 
 type Opt = { value: string; label: string };
@@ -8,12 +9,13 @@ type CarValues = {
   sector?: string; neighbourhood?: string; description?: string; pricePerHour?: number; pricePerDay?: number;
 };
 
-export function CarForm({ action, car, labels, errors, options, canAddPhotos }: {
+export function CarForm({ action, car, labels, errors, options, photoRoom, directUpload }: {
   action: (s: CarFormState, f: FormData) => Promise<CarFormState>;
   car?: CarValues; labels: Record<string, string>; errors: Record<string, string>;
-  options: { transmission: Opt[]; fuel: Opt[]; sector: Opt[] }; canAddPhotos: boolean;
+  options: { transmission: Opt[]; fuel: Opt[]; sector: Opt[] }; photoRoom: number; directUpload: boolean;
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
+  const [uploading, setUploading] = useState(false);
   const c = car ?? {};
   const field = (name: keyof CarValues, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}) => (
     <div>
@@ -56,15 +58,9 @@ export function CarForm({ action, car, labels, errors, options, canAddPhotos }: 
         {field("pricePerDay", labels.pricePerDay, { type: "number", min: 1, max: 5000, step: "1", inputMode: "decimal", defaultValue: c.pricePerDay ?? 150 })}
         <p className="hint sm:col-span-2 -mt-2">{labels.priceHint}</p>
       </div>
-      {canAddPhotos && (
-        <div>
-          <label className="label" htmlFor="photos">{labels.photos}</label>
-          <input className="input file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-blush" id="photos" name="photos" type="file" accept="image/jpeg,image/png,image/webp" multiple />
-          <p className="hint">{labels.photosHint}</p>
-        </div>
-      )}
+      {photoRoom > 0 && <PhotoPicker max={photoRoom} direct={directUpload} labels={labels} onBusyChange={setUploading} />}
       {state?.error && <p className="alert-err" role="alert">{errors[state.error] ?? errors.generic}</p>}
-      <div><button className="btn-ink" disabled={pending}>{c.id ? labels.save : labels.create}</button></div>
+      <div><button className="btn-ink" disabled={pending || uploading}>{c.id ? labels.save : labels.create}</button></div>
     </form>
   );
 }

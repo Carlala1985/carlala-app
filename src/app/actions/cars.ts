@@ -5,7 +5,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { FUELS, SECTORS, TRANSMISSIONS } from "@/lib/cars";
-import { isValidPhoto, MAX_PHOTOS, savePhoto } from "@/lib/uploads";
+import { isOurPhotoUrl, MAX_PHOTOS } from "@/lib/uploads";
 import { toBani } from "@/lib/money";
 
 export type CarFormState = { error?: string } | undefined;
@@ -36,8 +36,13 @@ export async function saveCar(_: CarFormState, formData: FormData): Promise<CarF
   const d = parsed.data;
   if (d.pricePerDay < d.pricePerHour) return { error: "errDayPrice" };
 
-  const files = formData.getAll("photos").filter((f): f is File => f instanceof File && f.size > 0);
-  if (files.some((f) => !isValidPhoto(f))) return { error: "errPhoto" };
+  let photoUrls: string[] = [];
+  try {
+    const raw: unknown = JSON.parse(String(formData.get("photoUrls") ?? "[]"));
+    photoUrls = Array.isArray(raw) ? raw.filter(isOurPhotoUrl) : [];
+  } catch {
+    photoUrls = [];
+  }
 
   const data = {
     make: d.make, model: d.model, year: d.year, seats: d.seats,
@@ -53,15 +58,13 @@ export async function saveCar(_: CarFormState, formData: FormData): Promise<CarF
     await db.car.update({ where: { id }, data });
     carId = id;
     const room = MAX_PHOTOS - car._count.photos;
-    for (const [i, f] of files.slice(0, Math.max(0, room)).entries()) {
-      await db.carPhoto.create({ data: { carId, url: await savePhoto(f), position: car._count.photos + i } });
-    }
+    await db.carPhoto.createMany({
+      data: photoUrls.slice(0, Math.max(0, room)).map((url, i) => ({ carId, url, position: car._count.photos + i })),
+    });
   } else {
     const car = await db.car.create({ data: { ...data, ownerId: user.id } });
     carId = car.id;
-    for (const [i, f] of files.slice(0, MAX_PHOTOS).entries()) {
-      await db.carPhoto.create({ data: { carId, url: await savePhoto(f), position: i } });
-    }
+    await db.carPhoto.createMany({ data: photoUrls.slice(0, MAX_PHOTOS).map((url, i) => ({ carId, url, position: i })) });
   }
   revalidatePath("/cars");
   redirect(`/account/cars?saved=${carId}`);
