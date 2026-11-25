@@ -33,7 +33,7 @@ const en = {
     login: "Log in", signup: "Create account", noAccount: "New to Carlala?", haveAccount: "Already have an account?",
     errInvalid: "Email or password is wrong.", errExists: "An account with this email already exists. Log in instead.",
     errPassword: "Use at least 8 characters for your password.", errName: "Enter your name.", errEmail: "Enter a valid email address.",
-    terms: "By creating an account you agree to our privacy policy.", suspended: "This account is suspended. Write to hello@carlala.eu.",
+    terms: "By creating an account you confirm you are 18 or older and have read our", privacyLink: "privacy policy", suspended: "This account is suspended. Write to hello@carlala.eu.",
   },
   myCars: {
     title: "My cars", add: "Add a car", empty: "You haven't listed a car yet.", emptyHint: "List your car and start earning when it's parked.",

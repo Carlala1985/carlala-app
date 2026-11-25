@@ -35,7 +35,7 @@ const ro: Dict = {
     login: "Intră în cont", signup: "Creează contul", noAccount: "Ești nou pe Carlala?", haveAccount: "Ai deja cont?",
     errInvalid: "Emailul sau parola nu sunt corecte.", errExists: "Există deja un cont cu acest email. Intră în cont.",
     errPassword: "Folosește cel puțin 8 caractere pentru parolă.", errName: "Introdu numele tău.", errEmail: "Introdu o adresă de email validă.",
-    terms: "Prin crearea contului ești de acord cu politica noastră de confidențialitate.", suspended: "Acest cont este suspendat. Scrie-ne la hello@carlala.eu.",
+    terms: "Prin crearea contului confirmi că ai cel puțin 18 ani și că ai citit", privacyLink: "politica de confidențialitate", suspended: "Acest cont este suspendat. Scrie-ne la hello@carlala.eu.",
   },
   myCars: {
     title: "Mașinile mele", add: "Adaugă o mașină", empty: "Încă nu ai listat nicio mașină.", emptyHint: "Listează-ți mașina și câștigă cât stă parcată.",

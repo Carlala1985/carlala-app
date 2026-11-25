@@ -30,7 +30,7 @@ export function AuthForm({ mode, action, labels, errors, next }: {
       )}
       {state?.error && <p className="alert-err" role="alert">{errors[state.error] ?? errors.generic}</p>}
       <button className="btn-ink mt-1" disabled={pending}>{mode === "login" ? labels.login : labels.signup}</button>
-      {mode === "signup" && <p className="text-[13px] text-muted">{labels.terms}</p>}
+      {mode === "signup" && <p className="text-[13px] text-muted">{labels.terms}{" "}<a href="https://carlala.eu/privacy.html" target="_blank" rel="noopener" className="font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4">{labels.privacyLink}</a></p>}
       <p className="text-[15px] text-muted">
         {mode === "login" ? labels.noAccount : labels.haveAccount}{" "}
         <Link className="font-semibold text-ink underline decoration-coral decoration-2 underline-offset-4"
