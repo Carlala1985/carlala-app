@@ -8,8 +8,8 @@ import { CarGlyph } from "@/components/Logo";
 
 export const dynamic = "force-dynamic";
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ account?: string }> }) {
-  const { account } = await searchParams;
+export default async function Home({ searchParams }: { searchParams: Promise<{ account?: string; reset?: string }> }) {
+  const { account, reset } = await searchParams;
   const { t, locale } = await getDict();
   const cars = await searchCars({}, 6);
   const defaults = defaultRange();
@@ -17,6 +17,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<{ a
   return (
     <>
       {account === "deleted" && <div className="wrap pt-6"><p className="alert-ok" role="status">{t.account.deleted}</p></div>}
+      {reset && <div className="wrap pt-6"><p className="alert-ok" role="status">{t.auth.resetDone}</p></div>}
       <section className="wrap grid items-center gap-10 py-10 md:grid-cols-[1.1fr_1fr] md:py-16">
         <div className="flex min-w-0 flex-col gap-5">
           <span className="eyebrow">{t.home.eyebrow}</span>

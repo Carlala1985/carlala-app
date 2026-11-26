@@ -35,6 +35,10 @@ const ro: Dict = {
     login: "Intră în cont", signup: "Creează contul", noAccount: "Ești nou pe Carlala?", haveAccount: "Ai deja cont?",
     errInvalid: "Emailul sau parola nu sunt corecte.", errExists: "Există deja un cont cu acest email. Intră în cont.",
     errPassword: "Folosește cel puțin 8 caractere pentru parolă.", errName: "Introdu numele tău.", errEmail: "Introdu o adresă de email validă.",
+    forgot: "Ți-ai uitat parola?", forgotTitle: "Resetează-ți parola", forgotText: "Introdu emailul contului și îți trimitem un link pentru a alege o parolă nouă.",
+    sendLink: "Trimite-mi linkul", forgotSent: "Dacă există un cont cu acest email, ți-am trimis un link. Verifică inboxul și dosarul spam. Linkul este valabil o oră.",
+    resetTitle: "Alege o parolă nouă", newPassword: "Parola nouă", resetSubmit: "Salvează parola nouă",
+    resetInvalid: "Linkul nu este valid, a expirat sau a fost deja folosit.", askNew: "Cere un link nou", resetDone: "Parola a fost schimbată și ești conectat.",
     terms: "Prin crearea contului confirmi că ai cel puțin 18 ani și că ai citit", privacyLink: "politica de confidențialitate", suspended: "Acest cont este suspendat. Scrie-ne la hello@carlala.eu.",
   },
   account: {

@@ -9,6 +9,7 @@ import { quote, validateRange } from "@/lib/pricing";
 import { parseLocal } from "@/lib/time";
 import { hasConflict, markPaid } from "@/lib/bookings";
 import { paymentUrl, stripeEnabled } from "@/lib/payments";
+import { notifyBooking } from "@/lib/notify";
 
 const back = (carId: string, start: string, end: string, extra: string) =>
   `/cars/${carId}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&${extra}`;
@@ -26,13 +27,14 @@ export async function requestBooking(formData: FormData) {
   if (err) redirect(back(carId, startRaw, endRaw, `error=${err}`));
   if (await hasConflict(carId, start, end)) redirect(back(carId, startRaw, endRaw, "error=unavailable"));
   const q = quote(start, end, car.pricePerHour, car.pricePerDay);
-  await db.booking.create({
+  const booking = await db.booking.create({
     data: {
       carId, renterId: user.id, start, end,
       totalPrice: q.total, platformFee: q.platformFee, ownerEarnings: q.ownerEarnings,
       message: String(formData.get("message") ?? "").slice(0, 1000),
     },
   });
+  await notifyBooking(booking.id, "newRequest");
   redirect("/account/trips?sent=1");
 }
 
@@ -50,6 +52,7 @@ export async function acceptBooking(formData: FormData) {
   if (!r || r.b.status !== "REQUESTED") return;
   if (await hasConflict(r.b.carId, r.b.start, r.b.end, r.b.id)) redirect("/account/requests?error=conflict");
   await db.booking.update({ where: { id: r.b.id }, data: { status: "ACCEPTED" } });
+  await notifyBooking(r.b.id, "accepted");
   revalidatePath("/account/requests");
 }
 
@@ -57,6 +60,7 @@ export async function declineBooking(formData: FormData) {
   const r = await ownBooking(String(formData.get("id")), "owner");
   if (!r || !["REQUESTED", "ACCEPTED"].includes(r.b.status)) return;
   await db.booking.update({ where: { id: r.b.id }, data: { status: "DECLINED" } });
+  await notifyBooking(r.b.id, "declined");
   revalidatePath("/account/requests");
 }
 
@@ -64,6 +68,7 @@ export async function completeBooking(formData: FormData) {
   const r = await ownBooking(String(formData.get("id")), "owner");
   if (!r || r.b.status !== "PAID" || r.b.start > new Date()) return;
   await db.booking.update({ where: { id: r.b.id }, data: { status: "COMPLETED" } });
+  await notifyBooking(r.b.id, "review");
   revalidatePath("/account/requests");
 }
 
@@ -72,6 +77,7 @@ export async function cancelBooking(formData: FormData) {
   const r = await ownBooking(String(formData.get("id")), "renter");
   if (!r || !["REQUESTED", "ACCEPTED"].includes(r.b.status)) return;
   await db.booking.update({ where: { id: r.b.id }, data: { status: "CANCELLED" } });
+  await notifyBooking(r.b.id, "cancelled");
   revalidatePath("/account/trips");
 }
 

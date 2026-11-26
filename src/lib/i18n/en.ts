@@ -33,6 +33,10 @@ const en = {
     login: "Log in", signup: "Create account", noAccount: "New to Carlala?", haveAccount: "Already have an account?",
     errInvalid: "Email or password is wrong.", errExists: "An account with this email already exists. Log in instead.",
     errPassword: "Use at least 8 characters for your password.", errName: "Enter your name.", errEmail: "Enter a valid email address.",
+    forgot: "Forgot your password?", forgotTitle: "Reset your password", forgotText: "Enter the email of your account and we'll send you a link to choose a new password.",
+    sendLink: "Send me a link", forgotSent: "If an account exists for this email, we've sent a link to it. Check your inbox and spam folder. The link works for one hour.",
+    resetTitle: "Choose a new password", newPassword: "New password", resetSubmit: "Save my new password",
+    resetInvalid: "This link is invalid, has expired or was already used.", askNew: "Ask for a new link", resetDone: "Your password has been changed and you're logged in.",
     terms: "By creating an account you confirm you are 18 or older and have read our", privacyLink: "privacy policy", suspended: "This account is suspended. Write to hello@carlala.eu.",
   },
   account: {

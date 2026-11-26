@@ -64,6 +64,7 @@ model User {
   bookingsAsRenter Booking[] @relation("renter")
   reviewsWritten  Review[]  @relation("author")
   reviewsReceived Review[]  @relation("subject")
+  resetTokens     PasswordResetToken[]
 }
 
 model Car {
@@ -138,4 +139,17 @@ model Review {
   createdAt DateTime @default(now())
 
   @@unique([bookingId, authorId])
+}
+
+/** One-time "forgot password" links. Only a hash of the token is stored. */
+model PasswordResetToken {
+  id        String    @id @default(cuid())
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@index([userId, createdAt])
 }

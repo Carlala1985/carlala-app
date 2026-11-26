@@ -64,6 +64,7 @@ npm test
    - `DATABASE_URL`, `DIRECT_URL` from Neon
    - `SESSION_SECRET`: a random string of at least 32 characters
    - `APP_URL`: optional. If unset, the app uses the production domain Vercel provides (`app.carlala.eu` once connected, else `carlala-app.vercel.app`).
+   - `BREVO_API_KEY`: Brevo **API** key (starts with `xkeysib-`, not the SMTP key) for booking emails and password resets. Without it, emails are only written to the logs.
    - `ADMIN_EMAILS`: `hello@carlala.eu` (whoever signs up or logs in with this address becomes admin)
    - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`: optional at first (see below)
 3. **Photos.** In the Vercel project, **Storage → Create → Blob**, then connect it to the project. Vercel adds `BLOB_READ_WRITE_TOKEN` itself. Redeploy afterwards.

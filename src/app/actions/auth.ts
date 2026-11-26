@@ -5,6 +5,7 @@ import { z } from "zod";
 import { db } from "@/lib/db";
 import { createSession, destroySession, isAdminEmail } from "@/lib/session";
 import { getLocale } from "@/lib/i18n";
+import { notifyWelcome } from "@/lib/notify";
 
 export type AuthState = { error?: string; values?: Record<string, string> } | undefined;
 
@@ -32,6 +33,7 @@ export async function signup(_: AuthState, formData: FormData): Promise<AuthStat
     data: { name, email, phone: phone || null, passwordHash: await bcrypt.hash(password, 10), locale: await getLocale(), role: isAdminEmail(email) ? "ADMIN" : "USER" },
   });
   await createSession(user.id);
+  await notifyWelcome(user);
   redirect(safeNext(formData.get("next")));
 }
 

@@ -1,6 +1,7 @@
 import "server-only";
 import { db } from "./db";
 import { BLOCKING } from "./cars";
+import { notifyBooking } from "./notify";
 
 /**
  * Moves bookings forward in time. Runs before dashboards are shown:
@@ -9,7 +10,12 @@ import { BLOCKING } from "./cars";
 export async function settleBookings() {
   const now = new Date();
   await db.booking.updateMany({ where: { status: { in: ["REQUESTED", "ACCEPTED"] }, start: { lt: now } }, data: { status: "EXPIRED" } });
-  await db.booking.updateMany({ where: { status: "PAID", end: { lt: now } }, data: { status: "COMPLETED" } });
+  const ended = await db.booking.findMany({ where: { status: "PAID", end: { lt: now } }, select: { id: true } });
+  for (const { id } of ended) {
+    // Only the request that actually flips the status sends the review invitation.
+    const { count } = await db.booking.updateMany({ where: { id, status: "PAID" }, data: { status: "COMPLETED" } });
+    if (count === 1) await notifyBooking(id, "review");
+  }
 }
 
 /** True when the car already has an accepted or paid booking overlapping this time. */
@@ -25,6 +31,12 @@ export async function hasConflict(carId: string, start: Date, end: Date, exclude
  * Returns "paid", "already" or "conflict" (someone else's trip was confirmed first).
  */
 export async function markPaid(bookingId: string) {
+  const result = await markPaidTx(bookingId);
+  if (result === "paid") await notifyBooking(bookingId, "paid");
+  return result;
+}
+
+async function markPaidTx(bookingId: string) {
   return db.$transaction(async (tx) => {
     const b = await tx.booking.findUnique({ where: { id: bookingId } });
     if (!b) return "missing" as const;
