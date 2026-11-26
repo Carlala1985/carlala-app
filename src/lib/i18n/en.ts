@@ -50,11 +50,11 @@ const en = {
     title: "Payouts", intro: "Carlala collects the rental from the renter and pays your share (75 %) to your bank account after each trip. Payments are handled by Stripe.",
     none: "Set up payouts to receive money from your rentals. Stripe will ask for your ID, address and IBAN; Carlala never sees your bank details.",
     setup: "Set up payouts", continue: "Continue setup on Stripe",
-    pending: "Stripe is still checking your details, or needs a bit more information.",
+    pending: "Stripe is checking your details. This usually takes a few minutes; reload this page to see the result.",
     restricted: "Stripe needs more information before you can receive payouts.",
     active: "Payouts are active. Your share of each finished trip is sent to your bank account.",
     dashboard: "Open my Stripe payout page", disabled: "Online payments aren't switched on yet. Bookings are paid with the test simulator.",
-    history: "Payouts for finished trips", noHistory: "No payouts yet.", paid: "Paid out", waiting: "Waiting for your payout setup", returned: "Back from Stripe. Your details are being checked.",
+    history: "Payouts for finished trips", simulated: "Paid with the test simulator: no payout", processing: "Payout being processed", noHistory: "No payouts yet.", paid: "Paid out", waiting: "Waiting for your payout setup", returned: "Back from Stripe. Your details are being checked.",
     needed: "Set up payouts before accepting requests, so we can pay you.", error: "We couldn't reach Stripe. Try again in a minute.",
   },
   myCars: {

@@ -52,11 +52,11 @@ const ro: Dict = {
     title: "Încasări", intro: "Carlala încasează chiria de la șofer și îți plătește partea ta (75 %) în contul bancar după fiecare închiriere. Plățile sunt procesate de Stripe.",
     none: "Activează încasările ca să primești banii din închirieri. Stripe îți va cere actul de identitate, adresa și IBAN-ul; Carlala nu îți vede niciodată datele bancare.",
     setup: "Activează încasările", continue: "Continuă pe Stripe",
-    pending: "Stripe îți verifică încă datele sau mai are nevoie de câteva informații.",
+    pending: "Stripe îți verifică datele. De obicei durează câteva minute; reîncarcă pagina ca să vezi rezultatul.",
     restricted: "Stripe are nevoie de mai multe informații înainte să poți primi bani.",
     active: "Încasările sunt active. Partea ta din fiecare închiriere încheiată ajunge în contul tău bancar.",
     dashboard: "Deschide pagina mea Stripe", disabled: "Plățile online nu sunt încă activate. Rezervările se plătesc cu simulatorul de test.",
-    history: "Plăți pentru închirieri încheiate", noHistory: "Încă nu ai primit plăți.", paid: "Plătit", waiting: "Așteaptă activarea încasărilor", returned: "Te-ai întors de pe Stripe. Datele tale sunt verificate.",
+    history: "Plăți pentru închirieri încheiate", simulated: "Plătit cu simulatorul de test: fără plată", processing: "Plata este în curs", noHistory: "Încă nu ai primit plăți.", paid: "Plătit", waiting: "Așteaptă activarea încasărilor", returned: "Te-ai întors de pe Stripe. Datele tale sunt verificate.",
     needed: "Activează încasările înainte să accepți cereri, ca să te putem plăti.", error: "Nu am putut contacta Stripe. Încearcă din nou peste un minut.",
   },
   myCars: {

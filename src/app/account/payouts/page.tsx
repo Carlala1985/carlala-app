@@ -49,7 +49,7 @@ export default async function Payouts({ searchParams }: { searchParams: Promise<
                 <div className="min-w-0"><p className="font-semibold">{b.car.make} {b.car.model}</p>
                   <p className="tnum text-sm text-muted">{formatDateTime(b.start, locale)} → {formatDateTime(b.end, locale)}</p></div>
                 <div className="tnum text-right"><p className="font-bold">{formatRon(b.ownerEarnings, locale)}</p>
-                  <p className={`text-sm ${b.transferredAt ? "text-ok" : "text-muted"}`}>{b.transferredAt ? t.payouts.paid : t.payouts.waiting}</p></div>
+                  <p className={`text-sm ${b.transferredAt ? "text-ok" : "text-muted"}`}>{b.transferredAt ? t.payouts.paid : b.refundedAt ? t.admin.refunded : !b.stripeChargeId ? t.payouts.simulated : status === "active" ? t.payouts.processing : t.payouts.waiting}</p></div>
               </li>
             ))}
           </ul>

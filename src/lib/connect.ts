@@ -60,11 +60,17 @@ export async function refreshPayoutStatus(user: User): Promise<PayoutStatus> {
   if (!stripeEnabled()) return "disabled";
   if (!user.stripeAccountId) return "none";
   const account = await stripe().v2.core.accounts.retrieve(user.stripeAccountId, { include: ["configuration.recipient"] });
-  const cap = account.configuration?.recipient?.capabilities?.stripe_balance?.stripe_transfers?.status;
-  const ready = cap === "active";
+  const capability = account.configuration?.recipient?.capabilities?.stripe_balance?.stripe_transfers;
+  const ready = capability?.status === "active";
   if (ready !== user.payoutsReady) await db.user.update({ where: { id: user.id }, data: { payoutsReady: ready } });
-  if (ready) await payPendingForOwner(user.id);
-  return ready ? "active" : cap === "restricted" || cap === "rejected" ? "restricted" : "pending";
+  if (ready) {
+    await payPendingForOwner(user.id);
+    return "active";
+  }
+  // "restricted" also covers the minute while Stripe verifies freshly submitted details:
+  // only say information is missing when Stripe actually asks the owner for something.
+  const asksOwner = (capability?.status_details ?? []).some((d) => d.resolution === "provide_info");
+  return capability?.status === "rejected" || (capability?.status === "restricted" && asksOwner) ? "restricted" : "pending";
 }
 
 export type PayoutResult = "paid" | "already" | "not_ready" | "not_eligible" | "disabled" | "error";

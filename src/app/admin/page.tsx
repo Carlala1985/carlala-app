@@ -49,6 +49,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
               <td className={td}><StatusPill status={b.status} t={t} /></td><td className={`${td} tnum text-right`}>{formatRon(b.totalPrice, locale)}</td>
               <td className={td}>{b.refundedAt ? <span className="pill bg-lilac">{t.admin.refunded}</span>
                 : b.transferredAt ? <span className="pill bg-[#e3f4ea] text-ok">{t.admin.paidOut}</span>
+                : b.status === "COMPLETED" && !b.stripeChargeId ? <span className="pill bg-lilac">{t.payouts.simulated}</span>
                 : b.status === "COMPLETED" && !b.car.owner.payoutsReady ? <span className="pill bg-peach">{t.admin.payoutPending}</span>
                 : b.status === "PAID" ? <ConfirmDelete action={adminRefund} fields={{ id: b.id }} cta={t.admin.refund} text={t.admin.refundText} confirm={t.admin.refundConfirm} /> : null}</td></tr>
           ))}</tbody></table></div>
