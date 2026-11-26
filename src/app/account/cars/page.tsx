@@ -17,7 +17,7 @@ export default async function MyCars({ searchParams }: { searchParams: Promise<{
     <div className="wrap py-10">
       <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
         <h1 className="text-4xl font-extrabold">{t.myCars.title}</h1>
-        <Link href="/account/cars/new" className="btn-ink">{t.myCars.add}</Link>
+        <div className="flex flex-wrap gap-2"><Link href="/account/payouts" className="btn-ghost">{t.nav.payouts}</Link><Link href="/account/cars/new" className="btn-ink">{t.myCars.add}</Link></div>
       </div>
       {saved && <p className="alert-ok mb-6" role="status">{t.carForm.saved}</p>}
       {deleted && <p className="alert-ok mb-6" role="status">{t.myCars.deleted}</p>}

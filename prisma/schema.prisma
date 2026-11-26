@@ -58,6 +58,8 @@ model User {
   locale       String   @default("ro")
   suspended    Boolean  @default(false)
   deletedAt    DateTime? // account deleted: personal data erased, row kept for bookings history
+  stripeAccountId String?  @unique // Stripe Connect account (Accounts v2) for receiving payouts
+  payoutsReady    Boolean  @default(false) // cached: stripe_transfers capability is active
   createdAt    DateTime @default(now())
 
   cars            Car[]
@@ -116,6 +118,12 @@ model Booking {
   ownerEarnings   Int // bani, totalPrice - platformFee
   message         String        @default("")
   stripeSessionId String?       @unique
+  stripePaymentIntentId String?
+  stripeChargeId        String?
+  stripeTransferId      String?   @unique // owner payout (separate charges and transfers)
+  transferredAt         DateTime?
+  stripeRefundId        String?
+  refundedAt            DateTime?
   paidAt          DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt

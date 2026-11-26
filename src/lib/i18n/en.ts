@@ -1,6 +1,6 @@
 const en = {
   meta: { title: "Carlala · The car next door, by the hour", description: "Rent cars from your neighbours in Bucharest, or earn from the car you barely use." },
-  nav: { account: "My account", find: "Find a car", list: "List your car", myCars: "My cars", trips: "My trips", requests: "Requests", admin: "Admin", login: "Log in", signup: "Sign up", logout: "Log out", menu: "Account" },
+  nav: { payouts: "Payouts", account: "My account", find: "Find a car", list: "List your car", myCars: "My cars", trips: "My trips", requests: "Requests", admin: "Admin", login: "Log in", signup: "Sign up", logout: "Log out", menu: "Account" },
   home: {
     eyebrow: "Bucharest",
     h1: "The car next door, by the hour.",
@@ -46,6 +46,17 @@ const en = {
     hasTrips: "You have a paid trip that hasn't ended yet, as a renter or as an owner. You can delete your account once it has finished.",
     deleted: "Your account has been deleted. Thank you for trying Carlala.", deletedUser: "Deleted user", none: "Not given",
   },
+  payouts: {
+    title: "Payouts", intro: "Carlala collects the rental from the renter and pays your share (75 %) to your bank account after each trip. Payments are handled by Stripe.",
+    none: "Set up payouts to receive money from your rentals. Stripe will ask for your ID, address and IBAN; Carlala never sees your bank details.",
+    setup: "Set up payouts", continue: "Continue setup on Stripe",
+    pending: "Stripe is still checking your details, or needs a bit more information.",
+    restricted: "Stripe needs more information before you can receive payouts.",
+    active: "Payouts are active. Your share of each finished trip is sent to your bank account.",
+    dashboard: "Open my Stripe payout page", disabled: "Online payments aren't switched on yet. Bookings are paid with the test simulator.",
+    history: "Payouts for finished trips", noHistory: "No payouts yet.", paid: "Paid out", waiting: "Waiting for your payout setup", returned: "Back from Stripe. Your details are being checked.",
+    needed: "Set up payouts before accepting requests, so we can pay you.", error: "We couldn't reach Stripe. Try again in a minute.",
+  },
   myCars: {
     title: "My cars", add: "Add a car", empty: "You haven't listed a car yet.", emptyHint: "List your car and start earning when it's parked.",
     edit: "Edit", pause: "Pause listing", resume: "Show listing", paused: "Paused", live: "Live", blocked: "Hidden by Carlala",
@@ -84,6 +95,8 @@ const en = {
   admin: {
     title: "Admin", users: "Users", cars: "Cars", bookings: "Bookings", revenue: "Carlala fees (paid trips)",
     deleteUser: "Delete", deleteCar: "Delete", confirm: "Yes, delete",
+    payout: "Payout", paidOut: "Paid out", payoutPending: "Owner not set up", refunded: "Refunded", refund: "Refund", refundConfirm: "Yes, refund in full",
+    refundText: "Refunds the renter in full and cancels the trip. Not possible once the owner has been paid.", refundedOk: "Refund done.", refundFailed: "The refund didn't go through. Check the booking in Stripe.",
     deleteUserText: "Erases this person's name, email and phone, deletes their cars and cancels their pending requests. Booking history is kept anonymously.",
     deleteCarText: "Removes the listing and its photos and declines pending requests. Booking history is kept.",
     deletedCar: "Car deleted.", deletedUser: "Account deleted.", carHasTrips: "This car has a paid trip that hasn't ended yet.", userHasTrips: "This person has a paid trip that hasn't ended yet.",

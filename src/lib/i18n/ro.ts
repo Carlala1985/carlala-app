@@ -2,7 +2,7 @@ import type { Dict } from "./en";
 
 const ro: Dict = {
   meta: { title: "Carlala · Mașina de lângă tine, cu ora", description: "Închiriază mașini de la vecinii tăi din București sau câștigă din mașina pe care o folosești rar." },
-  nav: { account: "Contul meu", find: "Caută o mașină", list: "Listează-ți mașina", myCars: "Mașinile mele", trips: "Rezervările mele", requests: "Cereri", admin: "Admin", login: "Intră în cont", signup: "Creează cont", logout: "Ieși din cont", menu: "Cont" },
+  nav: { payouts: "Încasări", account: "Contul meu", find: "Caută o mașină", list: "Listează-ți mașina", myCars: "Mașinile mele", trips: "Rezervările mele", requests: "Cereri", admin: "Admin", login: "Intră în cont", signup: "Creează cont", logout: "Ieși din cont", menu: "Cont" },
   home: {
     eyebrow: "București",
     h1: "Mașina de lângă tine, cu ora.",
@@ -48,6 +48,17 @@ const ro: Dict = {
     hasTrips: "Ai o rezervare plătită care nu s-a încheiat încă, ca șofer sau ca proprietar. Îți poți șterge contul după ce se încheie.",
     deleted: "Contul tău a fost șters. Îți mulțumim că ai încercat Carlala.", deletedUser: "Utilizator șters", none: "Nu a fost completat",
   },
+  payouts: {
+    title: "Încasări", intro: "Carlala încasează chiria de la șofer și îți plătește partea ta (75 %) în contul bancar după fiecare închiriere. Plățile sunt procesate de Stripe.",
+    none: "Activează încasările ca să primești banii din închirieri. Stripe îți va cere actul de identitate, adresa și IBAN-ul; Carlala nu îți vede niciodată datele bancare.",
+    setup: "Activează încasările", continue: "Continuă pe Stripe",
+    pending: "Stripe îți verifică încă datele sau mai are nevoie de câteva informații.",
+    restricted: "Stripe are nevoie de mai multe informații înainte să poți primi bani.",
+    active: "Încasările sunt active. Partea ta din fiecare închiriere încheiată ajunge în contul tău bancar.",
+    dashboard: "Deschide pagina mea Stripe", disabled: "Plățile online nu sunt încă activate. Rezervările se plătesc cu simulatorul de test.",
+    history: "Plăți pentru închirieri încheiate", noHistory: "Încă nu ai primit plăți.", paid: "Plătit", waiting: "Așteaptă activarea încasărilor", returned: "Te-ai întors de pe Stripe. Datele tale sunt verificate.",
+    needed: "Activează încasările înainte să accepți cereri, ca să te putem plăti.", error: "Nu am putut contacta Stripe. Încearcă din nou peste un minut.",
+  },
   myCars: {
     title: "Mașinile mele", add: "Adaugă o mașină", empty: "Încă nu ai listat nicio mașină.", emptyHint: "Listează-ți mașina și câștigă cât stă parcată.",
     edit: "Modifică", pause: "Pune pe pauză", resume: "Afișează anunțul", paused: "Pe pauză", live: "Activ", blocked: "Ascuns de Carlala",
@@ -86,6 +97,8 @@ const ro: Dict = {
   admin: {
     title: "Admin", users: "Utilizatori", cars: "Mașini", bookings: "Rezervări", revenue: "Comisioane Carlala (rezervări plătite)",
     deleteUser: "Șterge", deleteCar: "Șterge", confirm: "Da, șterge",
+    payout: "Plată proprietar", paidOut: "Plătit", payoutPending: "Proprietar neactivat", refunded: "Rambursat", refund: "Rambursează", refundConfirm: "Da, rambursează integral",
+    refundText: "Rambursează integral șoferul și anulează rezervarea. Nu se poate după ce proprietarul a fost plătit.", refundedOk: "Rambursare efectuată.", refundFailed: "Rambursarea nu a reușit. Verifică rezervarea în Stripe.",
     deleteUserText: "Șterge numele, emailul și telefonul acestei persoane, îi șterge mașinile și îi anulează cererile în așteptare. Istoricul rezervărilor rămâne anonim.",
     deleteCarText: "Șterge anunțul și pozele și refuză cererile în așteptare. Istoricul rezervărilor rămâne.",
     deletedCar: "Mașina a fost ștearsă.", deletedUser: "Contul a fost șters.", carHasTrips: "Mașina are o rezervare plătită care nu s-a încheiat încă.", userHasTrips: "Persoana are o rezervare plătită care nu s-a încheiat încă.",

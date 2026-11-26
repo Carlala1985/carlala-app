@@ -14,7 +14,7 @@ export async function settleBookings() {
   for (const { id } of ended) {
     // Only the request that actually flips the status sends the review invitation.
     const { count } = await db.booking.updateMany({ where: { id, status: "PAID" }, data: { status: "COMPLETED" } });
-    if (count === 1) await notifyBooking(id, "review");
+    if (count === 1) await onTripFinished(id);
   }
 }
 
@@ -30,13 +30,14 @@ export async function hasConflict(carId: string, start: Date, end: Date, exclude
  * Confirms payment for a booking. Safe to call more than once (Stripe webhook, return page, simulator).
  * Returns "paid", "already" or "conflict" (someone else's trip was confirmed first).
  */
-export async function markPaid(bookingId: string) {
-  const result = await markPaidTx(bookingId);
+export async function markPaid(bookingId: string, refs?: { paymentIntentId: string; chargeId: string | null }) {
+  const result = await markPaidTx(bookingId, refs);
   if (result === "paid") await notifyBooking(bookingId, "paid");
   return result;
 }
 
-async function markPaidTx(bookingId: string) {
+async function markPaidTx(bookingId: string, refs?: { paymentIntentId: string; chargeId: string | null }) {
+  const payment = refs ? { stripePaymentIntentId: refs.paymentIntentId, stripeChargeId: refs.chargeId } : {};
   return db.$transaction(async (tx) => {
     const b = await tx.booking.findUnique({ where: { id: bookingId } });
     if (!b) return "missing" as const;
@@ -46,11 +47,18 @@ async function markPaidTx(bookingId: string) {
       where: { carId: b.carId, status: "PAID", start: { lt: b.end }, end: { gt: b.start }, id: { not: b.id } },
     });
     if (clash > 0) {
-      // Needs a refund in Stripe; flagged for the admin page.
-      await tx.booking.update({ where: { id: b.id }, data: { status: "CANCELLED" } });
+      // Money was received for a car someone else already has: the caller refunds it.
+      await tx.booking.update({ where: { id: b.id }, data: { status: "CANCELLED", paidAt: new Date(), ...payment } });
       return "conflict" as const;
     }
-    await tx.booking.update({ where: { id: b.id }, data: { status: "PAID", paidAt: new Date() } });
+    await tx.booking.update({ where: { id: b.id }, data: { status: "PAID", paidAt: new Date(), ...payment } });
     return "paid" as const;
   }, { isolationLevel: "Serializable" });
+}
+
+/** A trip has ended: invite both sides to review and pay the owner (if Stripe is on and they're set up). */
+export async function onTripFinished(bookingId: string) {
+  await notifyBooking(bookingId, "review");
+  const { payOwner } = await import("./connect"); // loaded lazily: connect.ts imports this file
+  await payOwner(bookingId);
 }

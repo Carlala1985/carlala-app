@@ -2,7 +2,8 @@ import Link from "next/link";
 import { getDict, fmt } from "@/lib/i18n";
 import { requireUser } from "@/lib/session";
 import { db } from "@/lib/db";
-import { markPaid, settleBookings } from "@/lib/bookings";
+import { settleBookings } from "@/lib/bookings";
+import { confirmCheckout } from "@/lib/connect";
 import { stripe, stripeEnabled } from "@/lib/payments";
 import { formatRon } from "@/lib/money";
 import { formatDateTime } from "@/lib/time";
@@ -23,9 +24,8 @@ export default async function Trips({ searchParams }: { searchParams: Promise<Q>
   let payment = q.payment;
   if (q.session_id && stripeEnabled()) {
     try {
-      const s = await stripe().checkout.sessions.retrieve(q.session_id);
-      const own = s.metadata?.bookingId && (await db.booking.findFirst({ where: { id: s.metadata.bookingId, renterId: user.id } }));
-      if (own && s.payment_status === "paid") payment = (await markPaid(own.id)) === "conflict" ? "unavailable" : "success";
+      const res = await confirmCheckout(await stripe().checkout.sessions.retrieve(q.session_id), user.id);
+      if (res) payment = res === "conflict" ? "unavailable" : "success";
     } catch (e) { console.error(e); }
   }
   await settleBookings();

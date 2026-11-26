@@ -22,6 +22,7 @@ export default async function Account({ searchParams }: { searchParams: Promise<
         {row(t.account.phone, user.phone || t.account.none)}
         {row(t.account.memberSince, since)}
       </dl>
+      <p className="mt-4"><a href="/account/payouts" className="font-semibold underline decoration-coral decoration-2 underline-offset-4">{t.nav.payouts}</a></p>
       <section className="mt-10 flex flex-col gap-3">
         <h2 className="text-2xl font-bold">{t.account.deleteTitle}</h2>
         {error === "has_trips" && <p className="alert-err" role="alert">{t.account.hasTrips}</p>}

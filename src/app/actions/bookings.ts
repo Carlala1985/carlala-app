@@ -7,7 +7,7 @@ import { getLocale } from "@/lib/i18n";
 import { publicCar } from "@/lib/cars";
 import { quote, validateRange } from "@/lib/pricing";
 import { parseLocal } from "@/lib/time";
-import { hasConflict, markPaid } from "@/lib/bookings";
+import { hasConflict, markPaid, onTripFinished } from "@/lib/bookings";
 import { paymentUrl, stripeEnabled } from "@/lib/payments";
 import { notifyBooking } from "@/lib/notify";
 
@@ -50,6 +50,7 @@ async function ownBooking(id: string, as: "owner" | "renter") {
 export async function acceptBooking(formData: FormData) {
   const r = await ownBooking(String(formData.get("id")), "owner");
   if (!r || r.b.status !== "REQUESTED") return;
+  if (stripeEnabled() && !r.user.payoutsReady) redirect("/account/requests?error=payouts");
   if (await hasConflict(r.b.carId, r.b.start, r.b.end, r.b.id)) redirect("/account/requests?error=conflict");
   await db.booking.update({ where: { id: r.b.id }, data: { status: "ACCEPTED" } });
   await notifyBooking(r.b.id, "accepted");
@@ -68,7 +69,7 @@ export async function completeBooking(formData: FormData) {
   const r = await ownBooking(String(formData.get("id")), "owner");
   if (!r || r.b.status !== "PAID" || r.b.start > new Date()) return;
   await db.booking.update({ where: { id: r.b.id }, data: { status: "COMPLETED" } });
-  await notifyBooking(r.b.id, "review");
+  await onTripFinished(r.b.id);
   revalidatePath("/account/requests");
 }
 

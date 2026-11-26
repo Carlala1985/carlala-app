@@ -8,6 +8,8 @@ import { StatusPill } from "@/components/StatusPill";
 import { ReviewForm } from "@/components/ReviewForm";
 import { acceptBooking, completeBooking, declineBooking } from "@/app/actions/bookings";
 import { displayName } from "@/lib/deletion";
+import Link from "next/link";
+import { stripeEnabled } from "@/lib/payments";
 
 export default async function Requests({ searchParams }: { searchParams: Promise<{ error?: string }> }) {
   const user = await requireUser("/account/requests");
@@ -24,6 +26,11 @@ export default async function Requests({ searchParams }: { searchParams: Promise
     <div className="wrap py-10">
       <h1 className="mb-6 text-4xl font-extrabold">{t.requests.title}</h1>
       {error === "conflict" && <p className="alert-err mb-6" role="alert">{t.requests.conflict}</p>}
+      {stripeEnabled() && !user.payoutsReady && (
+        <div className={`${error === "payouts" ? "alert-err" : "alert-info"} mb-6 flex flex-wrap items-center justify-between gap-3`} role={error === "payouts" ? "alert" : undefined}>
+          <span>{t.payouts.needed}</span><Link href="/account/payouts" className="btn-ink btn-sm">{t.payouts.setup}</Link>
+        </div>
+      )}
       {bookings.length === 0 ? <div className="card p-8 text-xl font-bold">{t.requests.empty}</div> : (
         <ul className="grid gap-4">
           {bookings.map((b) => {
