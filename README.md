@@ -21,7 +21,7 @@ The presentation site (carlala.eu) is a separate static site on cyberfolks. This
 Every full 24 hours costs the daily price; leftover hours cost the hourly price, capped at one more day. Carlala keeps **25 %** of each rental from the owner's side (`PLATFORM_FEE_RATE` in `src/lib/pricing.ts`; both rules confirmed in November 2026). All times are Bucharest time; money is stored in bani.
 
 ### Not built yet
-ID and driving-licence checks, damage reports with photos, owner payouts (Stripe Connect), in-app messages, email notifications, refunds, Terms of use. The privacy policy on carlala.eu must be updated before real users sign up here, because accounts, phone numbers and payments are new kinds of data.
+ID and driving-licence checks, damage reports with photos, in-app messages, self-service cancellation with partial refunds, Stripe Tax, Terms of use. The privacy policy on carlala.eu must be updated before real users sign up here, because accounts, phone numbers and payments are new kinds of data.
 
 ## Run it locally
 
@@ -74,14 +74,16 @@ npm test
 
 To build locally without touching a database, run `npm run build:local`.
 
-## Stripe (test mode first)
+## Stripe (Payments + Connect)
 
-1. Create an account at stripe.com and stay in **Test mode**.
-2. Copy the secret key (`sk_test_…`) into `STRIPE_SECRET_KEY` on Vercel.
-3. In **Developers → Webhooks**, add the endpoint `https://app.carlala.eu/api/stripe/webhook` with the events `checkout.session.completed` and `checkout.session.async_payment_succeeded`. Copy its signing secret (`whsec_…`) into `STRIPE_WEBHOOK_SECRET`.
-4. Redeploy. The "Pay" button now opens Stripe Checkout; use the test card `4242 4242 4242 4242`.
+How money moves is described in `docs/stripe-plan.md`: Carlala charges the renter with Stripe Checkout, holds the money, and transfers the owner's 75 % when the trip finishes (separate charges and transfers). Owners set up payouts on the **Payouts** page, which sends them to Stripe-hosted onboarding.
 
-Before taking real money: activate the Stripe account for GUFFROY SRL, set up owner payouts (Stripe Connect), and add refunds for cancelled paid trips.
+1. In Stripe, use a **sandbox** first. Create a **restricted key** with Write on Checkout Sessions, Charges and Refunds, Transfers, and Connect (Accounts, Account Links), and Read on PaymentIntents. Put it in Vercel as `STRIPE_SECRET_KEY`.
+2. **Developers → Webhooks → Add destination**: endpoint `https://app.carlala.eu/api/stripe/webhook`, events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`. Put its signing secret in Vercel as `STRIPE_WEBHOOK_SECRET`.
+3. **Settings → Connect**: complete the platform profile (marketplace, Romania) and the branding shown to owners during onboarding.
+4. Redeploy. Owners must finish payout setup before they can accept requests. Pay with the test card `4242 4242 4242 4242`.
+
+Before taking real money: activate the Stripe account for GUFFROY SRL, repeat steps 1-3 in live mode, decide the tax setup with an accountant (see the plan), and publish Terms of use covering cancellations and refunds.
 
 ## Project map
 

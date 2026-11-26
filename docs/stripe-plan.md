@@ -54,6 +54,9 @@ Once answered: set the head office address in Stripe Tax settings, record the Ro
 
 ## 5. Build order
 
+Status (26 Nov 2026): steps 1-4 built and tested in the sandbox (webhook, transfer with `source_transaction`, idempotent retries, admin refund). Step 5 waits for the accountant; step 6 at launch.
+
+
 1. Sandbox + restricted key; upgrade SDK; harden the existing Checkout + webhook (already working in simulator mode).
 2. Owner onboarding (Accounts v2 + Account Links) and capability checks.
 3. Transfers on trip completion, refunds on cancellation, Connect webhooks.
