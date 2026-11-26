@@ -19,6 +19,8 @@ export default async function Payouts({ searchParams }: { searchParams: Promise<
     failed = true;
     status = user.payoutsReady ? "active" : user.stripeAccountId ? "pending" : "none";
   }
+  // Just back from Stripe: their details are being verified, even if Stripe hasn't caught up yet.
+  if (q.return && status === "restricted") status = "pending";
   const trips = await db.booking.findMany({
     where: { status: "COMPLETED", car: { ownerId: user.id } },
     orderBy: { end: "desc" }, take: 50, include: { car: true },
@@ -29,7 +31,6 @@ export default async function Payouts({ searchParams }: { searchParams: Promise<
     <div className="wrap max-w-[820px] py-10">
       <h1 className="mb-3 text-4xl font-extrabold">{t.payouts.title}</h1>
       <p className="mb-6 max-w-[62ch] text-muted">{t.payouts.intro}</p>
-      {q.return && status !== "active" && <p className="alert-info mb-4" role="status">{t.payouts.returned}</p>}
       {failed && <p className="alert-err mb-4" role="alert">{t.payouts.error}</p>}
       <div className="card flex flex-col items-start gap-4 p-6">
         <p className={tone}>{message}</p>
