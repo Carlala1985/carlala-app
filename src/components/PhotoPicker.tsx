@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { upload, uploadPresigned } from "@vercel/blob/client";
 
 
@@ -28,6 +28,8 @@ export function PhotoPicker({ max, mode, labels, onBusyChange, name = "photoUrls
 }) {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState("");
+  const cameraRef = useRef<HTMLInputElement>(null);
+  const galleryRef = useRef<HTMLInputElement>(null);
   const room = max - items.filter((i) => !i.failed).length;
 
   async function onPick(e: React.ChangeEvent<HTMLInputElement>) {
@@ -66,7 +68,7 @@ export function PhotoPicker({ max, mode, labels, onBusyChange, name = "photoUrls
   const urls = items.filter((i) => i.url).map((i) => i.url!);
   return (
     <div>
-      <label className="label" htmlFor={id}>{label ?? labels.photos}</label>
+      {(label ?? labels.photos) && <p className="label">{label ?? labels.photos}</p>}
       <input type="hidden" name={name} value={JSON.stringify(urls)} />
       {items.length > 0 && (
         <ul className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
@@ -80,8 +82,17 @@ export function PhotoPicker({ max, mode, labels, onBusyChange, name = "photoUrls
         </ul>
       )}
       {room > 0 && (
-        <input id={id} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={onPick}
-          className="input file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-blush" />
+        <div className="flex flex-wrap gap-2">
+          {/* capture opens the rear camera on phones; on computers it behaves like a file chooser */}
+          <input ref={cameraRef} id={`${id}-camera`} type="file" accept="image/*" capture="environment" onChange={onPick} className="sr-only" tabIndex={-1} aria-hidden="true" />
+          <input ref={galleryRef} id={id} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={onPick} className="sr-only" tabIndex={-1} aria-hidden="true" />
+          <button type="button" className="btn-coral btn-sm" onClick={() => cameraRef.current?.click()}>
+            <span aria-hidden="true">📷</span> {labels.takePhoto}
+          </button>
+          <button type="button" className="btn-ghost btn-sm" onClick={() => galleryRef.current?.click()}>
+            {labels.choosePhoto}
+          </button>
+        </div>
       )}
       {(hint ?? labels.photosHint) && <p className="hint">{hint ?? labels.photosHint}</p>}
       {error && <p className="alert-err mt-2" role="alert">{error}</p>}

@@ -100,7 +100,7 @@ const en = {
     description: "Description", descriptionHint: "Condition, what's included (child seat, chargers), pick-up instructions.",
     pricePerHour: "Price per hour (RON)", pricePerDay: "Price per day (RON)", priceHint: "The daily price should be lower than 24 hours at the hourly price.",
     uploading: "Uploading…", uploadFailed: "A photo couldn't be uploaded. Try again, or use a JPG or PNG under 5 MB.",
-    photos: "Photos", photosHint: "Up to 6 photos, JPG, PNG or WebP. Large photos are resized automatically.", removePhoto: "Remove",
+    takePhoto: "Take a photo", choosePhoto: "Choose from gallery", photos: "Photos", photosHint: "Up to 6 photos, JPG, PNG or WebP. Large photos are resized automatically.", removePhoto: "Remove",
     save: "Save changes", create: "Publish listing", saved: "Saved.",
     errRequired: "Fill in all required fields.", errPrice: "Prices must be between 1 and 5,000 RON.", errYear: "Enter a year between 1990 and next year.",
     errPhoto: "Photos must be JPG, PNG or WebP and smaller than 5 MB.", errDayPrice: "The daily price must be at least the hourly price.",
