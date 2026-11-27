@@ -25,7 +25,8 @@ async function main() {
     { email: "ana@demo.carlala.eu", name: "Ana Popescu" },
     { email: "mihai@demo.carlala.eu", name: "Mihai Ionescu" },
     { email: "ioana@demo.carlala.eu", name: "Ioana Dumitrescu" },
-    { email: "radu@demo.carlala.eu", name: "Radu Stan", phone: "+40 700 000 000" },
+    // Radu is the demo renter: his driver check is already passed.
+    { email: "radu@demo.carlala.eu", name: "Radu Stan", phone: "+40 700 000 000", driverStatus: "VERIFIED" as const, driverVerifiedAt: new Date(), driverName: "RADU STAN", licenceCountry: "RO" },
   ];
   const users = [];
   for (const p of people) users.push(await db.user.upsert({ where: { email: p.email }, update: {}, create: { ...p, passwordHash: hash } }));

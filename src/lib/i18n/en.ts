@@ -57,6 +57,31 @@ const en = {
     history: "Payouts for finished trips", simulated: "Paid with the test simulator: no payout", processing: "Payout being processed", noHistory: "No payouts yet.", paid: "Paid out", waiting: "Waiting for your payout setup", returned: "Back from Stripe. Your details are being checked.",
     needed: "Set up payouts before accepting requests, so we can pay you.", error: "We couldn't reach Stripe. Try again in a minute.",
   },
+  driver: {
+    title: "Driver check", nav: "Driver check",
+    intro: "Before your first booking, we check your driving licence and that it's really you. It takes about 2 minutes on Stripe's secure page: you photograph your licence and take a short selfie. Carlala never receives the photos.",
+    none: "You haven't checked your driving licence yet. You need this to book a car.",
+    start: "Check my driving licence", retry: "Try again",
+    processing: "Stripe is checking your licence. This usually takes a minute or two; reload this page to see the result.",
+    verified: "Your driving licence is checked. You can book cars.",
+    name: "Name on the licence", validUntil: "Valid until", country: "Issued in", checkedOn: "Checked on",
+    expired: "Your driving licence has expired. Check a valid licence to keep booking.",
+    failed: "Your licence check didn't pass.",
+    reasons: {
+      document_expired: "The licence has expired.", document_type_not_supported: "Only a driving licence can be used for this check.",
+      selfie_face_mismatch: "The selfie didn't match the photo on the licence.", under_age: "You must be at least 18 to rent a car on Carlala.",
+      under_supported_age: "You must be at least 18 to rent a car on Carlala.", consent_declined: "The check needs your consent to compare your face with your licence photo.",
+      abandoned: "The check wasn't finished.", country_not_supported: "Licences from this country can't be checked yet. Write to hello@carlala.eu.",
+      device_not_supported: "This device can't take the photos. Try again on a phone.",
+      other: "The check didn't go through. Try again with clear, well-lit photos of your licence.",
+    } as Record<string, string>,
+    privacy: "How we use this data is explained in our privacy policy.",
+    simulator: "Online checks aren't switched on yet.", simulate: "Simulate a passed check (test)",
+    error: "We couldn't reach Stripe. Try again in a minute.",
+    needed: "Check your driving licence before booking. It takes about 2 minutes.",
+    expiresBeforeTrip: "Your driving licence expires before the end of this trip.",
+    badgeOk: "Licence checked", badgeNo: "Licence not checked",
+  },
   agenda: {
     title: "Availability", intro: "Colour the hours when renters can book your car. Hours left white can't be booked.",
     tabWeek: "Typical week", tabDates: "Specific dates",
@@ -100,7 +125,7 @@ const en = {
     description: "Description", descriptionHint: "Condition, what's included (child seat, chargers), pick-up instructions.",
     pricePerHour: "Price per hour (RON)", pricePerDay: "Price per day (RON)", priceHint: "The daily price should be lower than 24 hours at the hourly price.",
     uploading: "Uploading…", uploadFailed: "A photo couldn't be uploaded. Try again, or use a JPG or PNG under 5 MB.",
-    takePhoto: "Take a photo", choosePhoto: "Choose from gallery", photos: "Photos", photosHint: "Up to 6 photos, JPG, PNG or WebP. Large photos are resized automatically.", removePhoto: "Remove",
+    retake: "Retake", takePhoto: "Take a photo", choosePhoto: "Choose from gallery", photos: "Photos", photosHint: "Up to 6 photos, JPG, PNG or WebP. Large photos are resized automatically.", removePhoto: "Remove",
     save: "Save changes", create: "Publish listing", saved: "Saved.",
     errRequired: "Fill in all required fields.", errPrice: "Prices must be between 1 and 5,000 RON.", errYear: "Enter a year between 1990 and next year.",
     errPhoto: "Photos must be JPG, PNG or WebP and smaller than 5 MB.", errDayPrice: "The daily price must be at least the hourly price.",
@@ -138,6 +163,7 @@ const en = {
     suspend: "Suspend", unsuspend: "Reactivate", block: "Hide", unblock: "Show", owner: "Owner", renter: "Renter", status: "Status", when: "When", total: "Total",
   },
   errors: {
+    driver: "Check your driving licence before booking.", licence_expired: "Your driving licence expires before the end of this trip.", 
     end_before_start: "The return time must be after the pick-up time.", too_short: "The minimum rental is 1 hour.",
     too_long: "The maximum rental is 30 days.", in_past: "The pick-up time is in the past.", unavailable: "The car is already booked for part of this time.",
     generic: "Something went wrong. Try again.", outside_agenda: "The owner hasn't made the car available for all of these hours. Check the availability below.", forbidden: "You can't do that.", dates: "Choose a pick-up and a return time.",
@@ -146,7 +172,7 @@ const en = {
   sectors: { S1: "Sector 1", S2: "Sector 2", S3: "Sector 3", S4: "Sector 4", S5: "Sector 5", S6: "Sector 6", ILFOV: "Ilfov" },
   transmission: { MANUAL: "Manual", AUTOMATIC: "Automatic" },
   fuel: { PETROL: "Petrol", DIESEL: "Diesel", HYBRID: "Hybrid", ELECTRIC: "Electric", LPG: "LPG" },
-  common: { back: "Back", save: "Save", cancel: "Cancel", language: "Language", example: "Example", required: "required" },
+  common: { back: "Back", save: "Save", cancel: "Cancel", language: "Language", example: "Example", required: "required", continue: "Continue" },
 };
 
 export default en;

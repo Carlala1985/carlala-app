@@ -5,6 +5,7 @@ import path from "path";
 import { del } from "@vercel/blob";
 import bcrypt from "bcryptjs";
 import { db } from "./db";
+import { redactCheck } from "./identity";
 import { blobEnabled, blobToken, UPLOAD_DIR } from "./uploads";
 
 /**
@@ -67,9 +68,12 @@ export async function deleteUser(userId: string): Promise<DeleteResult> {
         phone: null,
         passwordHash: await bcrypt.hash(randomBytes(32).toString("hex"), 10),
         role: "USER",
+        driverName: null, licenceCountry: null, licenceExpiresOn: null, driverError: null, driverStatus: "NONE",
       },
     }),
   ]);
+  // Ask Stripe to erase the licence and selfie photos from the driver check.
+  await redactCheck(user.identitySessionId);
   return "ok";
 }
 

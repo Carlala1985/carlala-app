@@ -14,6 +14,7 @@ import { displayName } from "@/lib/deletion";
 import { AgendaGrid } from "@/components/AgendaGrid";
 import { agendaDays, todayLocal } from "@/lib/agendaView";
 import { addDays } from "@/lib/availability";
+import { driverState } from "@/lib/driverRules";
 
 type Q = { start?: string; end?: string; error?: string };
 
@@ -127,6 +128,12 @@ export default async function CarPage({ params, searchParams }: { params: Promis
           {isOwner ? <p className="alert-info">{t.car.ownCar}</p>
             : !available ? <p className="alert-info">{t.car.paused}</p>
             : !user ? <Link href={`/login?next=${encodeURIComponent(`/cars/${car.id}?start=${startStr}&end=${endStr}`)}`} className="btn-ink">{t.car.loginToBook}</Link>
+            : price && driverState(user, end!) !== "ok" ? (
+              <div className="grid gap-3">
+                <p className="alert-info">{driverState(user, end!) === "expired" ? t.driver.expiresBeforeTrip : t.driver.needed}</p>
+                <Link href={`/account/verify?next=${encodeURIComponent(`/cars/${car.id}?start=${startStr}&end=${endStr}`)}`} className="btn-coral">{t.driver.start}</Link>
+              </div>
+            )
             : price && (
               <form action={requestBooking} className="grid gap-3">
                 <input type="hidden" name="carId" value={car.id} />

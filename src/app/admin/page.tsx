@@ -74,7 +74,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
         <div className="card overflow-x-auto"><table className="w-full min-w-[640px] text-[15px]">
           <thead><tr><th className={th}>{t.auth.name}</th><th className={th}>{t.auth.email}</th><th className={`${th} text-right`}>{t.admin.cars} / {t.admin.bookings}</th><th className={th}></th></tr></thead>
           <tbody>{users.map((u) => (
-            <tr key={u.id}><td className={td}>{u.name}{u.role === "ADMIN" && <span className="pill ml-2 bg-lilac">admin</span>}{u.suspended && <span className="pill ml-2 bg-[#fde8e6] text-err">{t.admin.suspend}</span>}</td>
+            <tr key={u.id}><td className={td}>{u.name}{u.role === "ADMIN" && <span className="pill ml-2 bg-lilac">admin</span>}{u.suspended && <span className="pill ml-2 bg-[#fde8e6] text-err">{t.admin.suspend}</span>}{u.driverStatus === "VERIFIED" && <span className="pill ml-2 bg-blush" title={u.driverName ?? ""}>✓ {t.driver.badgeOk}</span>}</td>
               <td className={td}>{u.email}</td><td className={`${td} tnum text-right`}>{u._count.cars} / {u._count.bookingsAsRenter}</td>
               <td className={`${td} text-right`}>{u.id !== admin.id && <div className="flex flex-wrap items-start justify-end gap-2"><form action={toggleSuspend}><input type="hidden" name="id" value={u.id} />
                 <button className="btn-ghost btn-sm">{u.suspended ? t.admin.unsuspend : t.admin.suspend}</button></form>

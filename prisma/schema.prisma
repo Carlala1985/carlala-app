@@ -60,6 +60,14 @@ model User {
   deletedAt    DateTime? // account deleted: personal data erased, row kept for bookings history
   stripeAccountId String?  @unique // Stripe Connect account (Accounts v2) for receiving payouts
   payoutsReady    Boolean  @default(false) // cached: stripe_transfers capability is active
+  // Driver check (Stripe Identity: driving licence + matching selfie). Photos stay with Stripe.
+  driverStatus      DriverStatus @default(NONE)
+  identitySessionId String?   @unique // latest Stripe VerificationSession
+  driverVerifiedAt  DateTime?
+  driverName        String?   // name as printed on the licence
+  licenceExpiresOn  DateTime? @db.Date
+  licenceCountry    String?
+  driverError       String?   // Stripe last_error.code (or "under_age") when the check didn't pass
   createdAt    DateTime @default(now())
 
   cars            Car[]
@@ -179,6 +187,13 @@ model AvailabilityException {
   hours Int[]
 
   @@unique([carId, date])
+}
+
+enum DriverStatus {
+  NONE
+  PROCESSING
+  VERIFIED
+  REQUIRES_INPUT
 }
 
 enum HandoverStage {

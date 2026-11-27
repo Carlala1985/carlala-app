@@ -65,6 +65,12 @@ export function PhotoPicker({ max, mode, labels, onBusyChange, name = "photoUrls
     onBusyChange(false);
   }
 
+  /** Drops a photo so it can be retaken (the uploaded file is left; unused uploads are harmless). */
+  function remove(key: string) {
+    setItems((cur) => cur.filter((it) => it.key !== key));
+    setError("");
+  }
+
   const urls = items.filter((i) => i.url).map((i) => i.url!);
   return (
     <div>
@@ -76,6 +82,12 @@ export function PhotoPicker({ max, mode, labels, onBusyChange, name = "photoUrls
             <li key={it.key} className="relative overflow-hidden rounded-xl ring-1 ring-line">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={it.preview} alt="" className={`aspect-square w-full object-cover ${it.url ? "" : "opacity-50"}`} />
+              {(it.url || it.failed) && (
+                <button type="button" onClick={() => remove(it.key)} aria-label={max === 1 ? labels.retake : labels.removePhoto}
+                  className="absolute right-1 top-1 rounded-full bg-ink/85 px-2.5 py-1 text-xs font-semibold text-white">
+                  {max === 1 ? `↺ ${labels.retake}` : "✕"}
+                </button>
+              )}
               {!it.url && <span className={`absolute inset-x-1 bottom-1 rounded-md px-1 text-center text-[11px] font-semibold ${it.failed ? "bg-err text-white" : "bg-white"}`}>{it.failed ? "✕" : labels.uploading}</span>}
             </li>
           ))}

@@ -42,6 +42,9 @@ export default async function Requests({ searchParams }: { searchParams: Promise
                 </div>
                 <p className="tnum text-[15px]">{formatDateTime(b.start, locale)} → {formatDateTime(b.end, locale)}</p>
                 <p className="text-sm text-muted">{fmt(t.requests.from, { name: displayName(b.renter, t.account.deletedUser) })}{b.status === "PAID" && b.renter.phone ? ` · ${b.renter.phone}` : ""}</p>
+                <p className="text-sm">{b.renter.driverStatus === "VERIFIED"
+                  ? <span className="pill bg-[#e3f4ea] text-ok">✓ {t.driver.badgeOk}{b.status === "PAID" && b.renter.driverName ? `: ${b.renter.driverName}` : ""}</span>
+                  : <span className="pill bg-peach text-ink">{t.driver.badgeNo}</span>}</p>
                 {b.message && <blockquote className="rounded-2xl bg-blush px-4 py-3 text-[15px]">“{b.message}”</blockquote>}
                 <p className="tnum font-semibold">{fmt(t.requests.earnings, { price: formatRon(b.ownerEarnings, locale) })} <span className="font-normal text-muted">/ {formatRon(b.totalPrice, locale)}</span></p>
                 <div className="mt-1 flex flex-wrap gap-2">

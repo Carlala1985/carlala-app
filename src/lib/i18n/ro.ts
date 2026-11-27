@@ -59,6 +59,31 @@ const ro: Dict = {
     history: "Plăți pentru închirieri încheiate", simulated: "Plătit cu simulatorul de test: fără plată", processing: "Plata este în curs", noHistory: "Încă nu ai primit plăți.", paid: "Plătit", waiting: "Așteaptă activarea încasărilor", returned: "Te-ai întors de pe Stripe. Datele tale sunt verificate.",
     needed: "Activează încasările înainte să accepți cereri, ca să te putem plăti.", error: "Nu am putut contacta Stripe. Încearcă din nou peste un minut.",
   },
+  driver: {
+    title: "Verificarea șoferului", nav: "Verificarea șoferului",
+    intro: "Înainte de prima rezervare, verificăm permisul tău de conducere și că ești chiar tu. Durează cam 2 minute pe pagina securizată Stripe: fotografiezi permisul și faci un scurt selfie. Carlala nu primește niciodată pozele.",
+    none: "Nu ți-ai verificat încă permisul de conducere. Ai nevoie de asta ca să rezervi o mașină.",
+    start: "Verifică-mi permisul", retry: "Încearcă din nou",
+    processing: "Stripe îți verifică permisul. De obicei durează un minut sau două; reîncarcă pagina ca să vezi rezultatul.",
+    verified: "Permisul tău de conducere este verificat. Poți rezerva mașini.",
+    name: "Numele de pe permis", validUntil: "Valabil până la", country: "Emis în", checkedOn: "Verificat pe",
+    expired: "Permisul tău de conducere a expirat. Verifică un permis valabil ca să poți rezerva în continuare.",
+    failed: "Verificarea permisului nu a reușit.",
+    reasons: {
+      document_expired: "Permisul a expirat.", document_type_not_supported: "Pentru această verificare se poate folosi doar permisul de conducere.",
+      selfie_face_mismatch: "Selfie-ul nu s-a potrivit cu poza de pe permis.", under_age: "Trebuie să ai cel puțin 18 ani ca să închiriezi o mașină pe Carlala.",
+      under_supported_age: "Trebuie să ai cel puțin 18 ani ca să închiriezi o mașină pe Carlala.", consent_declined: "Verificarea are nevoie de acordul tău pentru a compara fața ta cu poza de pe permis.",
+      abandoned: "Verificarea nu a fost terminată.", country_not_supported: "Permisele din această țară nu pot fi verificate încă. Scrie-ne la hello@carlala.eu.",
+      device_not_supported: "Acest dispozitiv nu poate face pozele. Încearcă din nou de pe telefon.",
+      other: "Verificarea nu a reușit. Încearcă din nou cu poze clare, bine luminate, ale permisului.",
+    } as Record<string, string>,
+    privacy: "Cum folosim aceste date este explicat în politica de confidențialitate.",
+    simulator: "Verificarea online nu este încă activată.", simulate: "Simulează o verificare reușită (test)",
+    error: "Nu am putut contacta Stripe. Încearcă din nou peste un minut.",
+    needed: "Verifică-ți permisul de conducere înainte de rezervare. Durează cam 2 minute.",
+    expiresBeforeTrip: "Permisul tău de conducere expiră înainte de sfârșitul acestei călătorii.",
+    badgeOk: "Permis verificat", badgeNo: "Permis neverificat",
+  },
   agenda: {
     title: "Disponibilitate", intro: "Colorează orele în care mașina poate fi rezervată. Orele lăsate albe nu pot fi rezervate.",
     tabWeek: "Săptămâna obișnuită", tabDates: "Date anume",
@@ -102,7 +127,7 @@ const ro: Dict = {
     description: "Descriere", descriptionHint: "Starea mașinii, ce include (scaun de copil, încărcătoare), cum se face preluarea.",
     pricePerHour: "Preț pe oră (RON)", pricePerDay: "Preț pe zi (RON)", priceHint: "Prețul pe zi ar trebui să fie mai mic decât 24 de ore la prețul pe oră.",
     uploading: "Se încarcă…", uploadFailed: "O poză nu a putut fi încărcată. Încearcă din nou sau folosește un JPG sau PNG sub 5 MB.",
-    takePhoto: "Fă o poză", choosePhoto: "Alege din galerie", photos: "Poze", photosHint: "Până la 6 poze, JPG, PNG sau WebP. Pozele mari sunt micșorate automat.", removePhoto: "Șterge",
+    retake: "Refă poza", takePhoto: "Fă o poză", choosePhoto: "Alege din galerie", photos: "Poze", photosHint: "Până la 6 poze, JPG, PNG sau WebP. Pozele mari sunt micșorate automat.", removePhoto: "Șterge",
     save: "Salvează", create: "Publică anunțul", saved: "Salvat.",
     errRequired: "Completează toate câmpurile obligatorii.", errPrice: "Prețurile trebuie să fie între 1 și 5.000 RON.", errYear: "Introdu un an între 1990 și anul viitor.",
     errPhoto: "Pozele trebuie să fie JPG, PNG sau WebP și mai mici de 5 MB.", errDayPrice: "Prețul pe zi trebuie să fie cel puțin cât prețul pe oră.",
@@ -140,6 +165,7 @@ const ro: Dict = {
     suspend: "Suspendă", unsuspend: "Reactivează", block: "Ascunde", unblock: "Afișează", owner: "Proprietar", renter: "Șofer", status: "Stare", when: "Când", total: "Total",
   },
   errors: {
+    driver: "Verifică-ți permisul de conducere înainte de rezervare.", licence_expired: "Permisul tău de conducere expiră înainte de sfârșitul acestei călătorii.", 
     end_before_start: "Ora de returnare trebuie să fie după ora de preluare.", too_short: "Închirierea minimă este de 1 oră.",
     too_long: "Închirierea maximă este de 30 de zile.", in_past: "Ora de preluare este în trecut.", unavailable: "Mașina este deja rezervată pentru o parte din acest interval.",
     generic: "Ceva nu a mers. Încearcă din nou.", outside_agenda: "Proprietarul nu a făcut mașina disponibilă pentru toate aceste ore. Verifică disponibilitatea de mai jos.", forbidden: "Nu poți face asta.", dates: "Alege ora de preluare și de returnare.",
@@ -148,7 +174,7 @@ const ro: Dict = {
   sectors: { S1: "Sector 1", S2: "Sector 2", S3: "Sector 3", S4: "Sector 4", S5: "Sector 5", S6: "Sector 6", ILFOV: "Ilfov" },
   transmission: { MANUAL: "Manuală", AUTOMATIC: "Automată" },
   fuel: { PETROL: "Benzină", DIESEL: "Motorină", HYBRID: "Hibrid", ELECTRIC: "Electric", LPG: "GPL" },
-  common: { back: "Înapoi", save: "Salvează", cancel: "Renunță", language: "Limba", example: "Exemplu", required: "obligatoriu" },
+  common: { back: "Înapoi", save: "Salvează", cancel: "Renunță", language: "Limba", example: "Exemplu", required: "obligatoriu", continue: "Continuă" },
 };
 
 export default ro;

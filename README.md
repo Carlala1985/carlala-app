@@ -12,6 +12,7 @@ The presentation site (carlala.eu) is a separate static site on cyberfolks. This
 | Owners | List a car (make, model, year, seats, gearbox, fuel, sector, neighbourhood, description, hourly and daily price, up to 6 photos), edit it, pause it. |
 | Traffic analytics | Admin → Traffic: visits, page views, daily chart, top pages, sources, countries, devices, languages for carlala.eu and the app. Counted without cookies; no IP stored (daily-rotating salted hash); kept 13 months. carlala.eu sends a beacon to /api/track. |
 | Hand-over reports | At pick-up and return, either side submits a locked condition report: front, back, both sides, dashboard (km and fuel) and optional damage photos, plus readings. The other side confirms or reports a difference (flagged in Admin, emailed to ADMIN_EMAILS). |
+| Driver checks | Before their first booking, renters check their driving licence with Stripe Identity (licence photo + live selfie, on Stripe's page; page **Driver check**). Carlala keeps only the result, the name on the licence, its expiry date and country; the date of birth is read once for the 18+ check. Requests are refused if the licence expires before the trip ends. Owners see "Licence checked" (and the name on the licence once paid). Deleting an account asks Stripe to erase the photos. Without Stripe keys, a labelled simulator passes the check. |
 | Availability agenda | Owners colour the hours their car can be booked: a typical week plus changes for specific dates (per-car page under My cars). Search and booking requests respect it; the car page shows the next 7 days. Cars without an agenda can be requested at any time. |
 | Renters | Search by sector, pick-up and return time, gearbox and fuel. Cars already booked for those hours are hidden; each result shows the total price. |
 | Bookings | Request with a message, owner accepts or declines, renter pays, owner marks the trip finished. Unanswered or unpaid requests expire at pick-up time; paid trips finish automatically at return time. Overlapping bookings are refused. |
@@ -24,7 +25,7 @@ The presentation site (carlala.eu) is a separate static site on cyberfolks. This
 Every full 24 hours costs the daily price; leftover hours cost the hourly price, capped at one more day. Carlala keeps **25 %** of each rental from the owner's side (`PLATFORM_FEE_RATE` in `src/lib/pricing.ts`; both rules confirmed in November 2026). All times are Bucharest time; money is stored in bani.
 
 ### Not built yet
-ID and driving-licence checks, damage reports with photos, in-app messages, self-service cancellation with partial refunds, Stripe Tax, Terms of use. The privacy policy on carlala.eu must be updated before real users sign up here, because accounts, phone numbers and payments are new kinds of data.
+In-app messages, self-service cancellation with partial refunds, Stripe Tax, Terms of use. The privacy policy on carlala.eu must be updated before real users sign up here, because accounts, phone numbers and payments are new kinds of data.
 
 ## Run it locally
 
@@ -81,8 +82,8 @@ To build locally without touching a database, run `npm run build:local`.
 
 How money moves is described in `docs/stripe-plan.md`: Carlala charges the renter with Stripe Checkout, holds the money, and transfers the owner's 75 % when the trip finishes (separate charges and transfers). Owners set up payouts on the **Payouts** page, which sends them to Stripe-hosted onboarding.
 
-1. In Stripe, use a **sandbox** first. Create a **restricted key** with Write on Checkout Sessions, Charges and Refunds, Transfers, and Connect (Accounts, Account Links), and Read on PaymentIntents. Put it in Vercel as `STRIPE_SECRET_KEY`.
-2. **Developers → Webhooks → Add destination**: endpoint `https://app.carlala.eu/api/stripe/webhook`, events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`. Put its signing secret in Vercel as `STRIPE_WEBHOOK_SECRET`.
+1. In Stripe, use a **sandbox** first. Create a **restricted key** with Write on Checkout Sessions, Charges and Refunds, Transfers, Connect (Accounts, Account Links) and Identity Verification Results, and Read on PaymentIntents. Put it in Vercel as `STRIPE_SECRET_KEY`.
+2. **Developers → Webhooks → Add destination**: endpoint `https://app.carlala.eu/api/stripe/webhook`, events `checkout.session.completed`, `checkout.session.async_payment_succeeded`, `checkout.session.async_payment_failed`, `identity.verification_session.processing`, `identity.verification_session.verified`, `identity.verification_session.requires_input`, `identity.verification_session.canceled`. Put its signing secret in Vercel as `STRIPE_WEBHOOK_SECRET`.
 3. **Settings → Connect**: complete the platform profile (marketplace, Romania) and the branding shown to owners during onboarding.
 4. Redeploy. Owners must finish payout setup before they can accept requests. Pay with the test card `4242 4242 4242 4242`.
 
