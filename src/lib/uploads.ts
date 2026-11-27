@@ -47,23 +47,27 @@ export function isValidPhoto(f: File) {
 }
 
 /** Local development only. */
-export async function savePhotoLocally(f: File) {
-  const name = `cars/${randomUUID()}.${PHOTO_TYPES[f.type]}`;
-  await mkdir(path.join(UPLOAD_DIR, "cars"), { recursive: true });
+/** Photo folders: listing photos and hand-over (condition report) photos. */
+export const PHOTO_FOLDERS = ["cars", "handovers"] as const;
+export type PhotoFolder = (typeof PHOTO_FOLDERS)[number];
+
+export async function savePhotoLocally(f: File, folder: PhotoFolder = "cars") {
+  const name = `${folder}/${randomUUID()}.${PHOTO_TYPES[f.type]}`;
+  await mkdir(path.join(UPLOAD_DIR, folder), { recursive: true });
   await writeFile(path.join(UPLOAD_DIR, name), Buffer.from(await f.arrayBuffer()));
   return `/uploads/${name}`;
 }
 
 /** Only accept photo URLs that point at our own storage, never arbitrary links sent by a browser. */
-export function isOurPhotoUrl(url: unknown): url is string {
+export function isOurPhotoUrl(url: unknown, folder: PhotoFolder = "cars"): url is string {
   if (typeof url !== "string" || url.length > 500) return false;
   if (blobEnabled()) {
     try {
       const u = new URL(url);
-      return u.protocol === "https:" && u.hostname.endsWith(".public.blob.vercel-storage.com") && u.pathname.startsWith("/cars/");
+      return u.protocol === "https:" && u.hostname.endsWith(".public.blob.vercel-storage.com") && u.pathname.startsWith(`/${folder}/`);
     } catch {
       return false;
     }
   }
-  return /^\/uploads\/cars\/[0-9a-f-]{36}\.(jpg|png|webp)$/.test(url);
+  return new RegExp(`^/uploads/${folder}/[0-9a-f-]{36}\\.(jpg|png|webp)$`).test(url);
 }

@@ -16,7 +16,8 @@ export function CarForm({ action, car, labels, errors, options, photoRoom, uploa
 }) {
   const [state, formAction, pending] = useActionState(action, undefined);
   const [uploading, setUploading] = useState(false);
-  const c = car ?? {};
+  // After a failed save React clears the form: refill it with what the person typed.
+  const c: CarValues = { ...(car ?? {}), ...(state?.values ?? {}) } as CarValues;
   const field = (name: keyof CarValues, label: string, props: React.InputHTMLAttributes<HTMLInputElement> = {}) => (
     <div>
       <label className="label" htmlFor={name}>{label}</label>
@@ -26,7 +27,7 @@ export function CarForm({ action, car, labels, errors, options, photoRoom, uploa
   const select = (name: keyof CarValues, label: string, opts: Opt[]) => (
     <div>
       <label className="label" htmlFor={name}>{label}</label>
-      <select className="input" id={name} name={name} defaultValue={(c[name] as string) ?? opts[0].value}>
+      <select key={String(c[name] ?? "")} className="input" id={name} name={name} defaultValue={(c[name] as string) ?? opts[0].value}>
         {opts.map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
       </select>
     </div>

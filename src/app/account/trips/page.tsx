@@ -32,7 +32,7 @@ export default async function Trips({ searchParams }: { searchParams: Promise<Q>
 
   const trips = await db.booking.findMany({
     where: { renterId: user.id }, orderBy: { start: "desc" },
-    include: { car: { include: { owner: true, photos: { orderBy: { position: "asc" }, take: 1 } } }, reviews: true },
+    include: { car: { include: { owner: true, photos: { orderBy: { position: "asc" }, take: 1 } } }, reviews: true, handovers: true },
   });
   const msg = q.sent ? ["ok", t.car.requestSent] : payment === "success" ? ["ok", t.pay.success]
     : payment === "cancelled" ? ["info", t.pay.cancelled] : payment === "failed" ? ["err", t.pay.failed]
@@ -65,6 +65,11 @@ export default async function Trips({ searchParams }: { searchParams: Promise<Q>
                     {b.status === "ACCEPTED" && (
                       <form action={payBooking}><input type="hidden" name="id" value={b.id} />
                         <button className="btn-coral btn-sm">{fmt(t.trips.pay, { price: formatRon(b.totalPrice, locale) })}</button></form>
+                    )}
+                    {(b.status === "PAID" || b.status === "COMPLETED") && (
+                      <Link href={`/bookings/${b.id}/handover`} className="btn-ghost btn-sm">
+                        {t.handover.button}{b.handovers.some((x) => x.submittedById !== user.id && !x.confirmedAt && !x.objectionAt) && <span className="pill ml-1 bg-coral">{t.handover.needsYou}</span>}
+                      </Link>
                     )}
                     {(b.status === "REQUESTED" || b.status === "ACCEPTED") && (
                       <form action={cancelBooking}><input type="hidden" name="id" value={b.id} />

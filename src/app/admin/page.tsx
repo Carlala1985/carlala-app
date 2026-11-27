@@ -20,7 +20,7 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const [users, cars, bookings, fees] = await Promise.all([
     db.user.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { _count: { select: { cars: { where: { deletedAt: null } }, bookingsAsRenter: true } } } }),
     db.car.findMany({ where: { deletedAt: null }, orderBy: { createdAt: "desc" }, take: 100, include: { owner: true } }),
-    db.booking.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { car: { include: { owner: true } }, renter: true } }),
+    db.booking.findMany({ orderBy: { createdAt: "desc" }, take: 100, include: { car: { include: { owner: true } }, renter: true, handovers: { select: { objectionAt: true } } } }),
     db.booking.aggregate({ where: { status: { in: ["PAID", "COMPLETED"] } }, _sum: { platformFee: true } }),
   ]);
   const stat = (label: string, value: string | number) => (
@@ -46,7 +46,8 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
             <tr key={b.id}><td className={td}><Link href={`/cars/${b.carId}`} className="font-semibold underline decoration-line underline-offset-4">{b.car.make} {b.car.model}</Link></td>
               <td className={td}>{displayName(b.renter, t.account.deletedUser)}<br /><span className="text-sm text-muted">{b.renter.email}</span></td>
               <td className={`${td} tnum`}>{formatDateTime(b.start, locale)}<br /><span className="text-sm text-muted">→ {formatDateTime(b.end, locale)}</span></td>
-              <td className={td}><StatusPill status={b.status} t={t} /></td><td className={`${td} tnum text-right`}>{formatRon(b.totalPrice, locale)}</td>
+              <td className={td}><div className="flex flex-col items-start gap-1"><StatusPill status={b.status} t={t} />
+                {b.handovers.length > 0 && <Link href={`/bookings/${b.id}/handover`} className={`pill ${b.handovers.some((x) => x.objectionAt) ? "bg-[#fde8e6] text-err" : "bg-lilac"}`}>{b.handovers.some((x) => x.objectionAt) ? t.handover.disputeAdmin : `${t.handover.button} (${b.handovers.length}/2)`}</Link>}</div></td><td className={`${td} tnum text-right`}>{formatRon(b.totalPrice, locale)}</td>
               <td className={td}>{b.refundedAt ? <span className="pill bg-lilac">{t.admin.refunded}</span>
                 : b.transferredAt ? <span className="pill bg-[#e3f4ea] text-ok">{t.admin.paidOut}</span>
                 : b.status === "COMPLETED" && !b.stripeChargeId ? <span className="pill bg-lilac">{t.payouts.simulated}</span>

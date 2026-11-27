@@ -10,6 +10,7 @@ The presentation site (carlala.eu) is a separate static site on cyberfolks. This
 |---|---|
 | Accounts | Sign up, log in, log out with email and password (sessions in a signed cookie). |
 | Owners | List a car (make, model, year, seats, gearbox, fuel, sector, neighbourhood, description, hourly and daily price, up to 6 photos), edit it, pause it. |
+| Hand-over reports | At pick-up and return, either side submits a locked condition report: front, back, both sides, dashboard (km and fuel) and optional damage photos, plus readings. The other side confirms or reports a difference (flagged in Admin, emailed to ADMIN_EMAILS). |
 | Availability agenda | Owners colour the hours their car can be booked: a typical week plus changes for specific dates (per-car page under My cars). Search and booking requests respect it; the car page shows the next 7 days. Cars without an agenda can be requested at any time. |
 | Renters | Search by sector, pick-up and return time, gearbox and fuel. Cars already booked for those hours are hidden; each result shows the total price. |
 | Bookings | Request with a message, owner accepts or declines, renter pays, owner marks the trip finished. Unanswered or unpaid requests expire at pick-up time; paid trips finish automatically at return time. Overlapping bookings are refused. |

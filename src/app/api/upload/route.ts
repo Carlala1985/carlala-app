@@ -6,10 +6,10 @@ import { blobMode, blobToken, isValidPhoto, MAX_PHOTO_BYTES, PHOTO_TYPES, savePh
 
 const allowedContentTypes = Object.keys(PHOTO_TYPES);
 
-/** Only signed-in users may upload, and only into cars/. */
+/** Only signed-in users may upload, and only into our photo folders. */
 async function checkUpload(pathname: string) {
   if (!(await currentUser())) throw new Error("not signed in");
-  if (!/^cars\/[\w-]+\.(jpg|png|webp)$/.test(pathname)) throw new Error("bad path");
+  if (!/^(cars|handovers)\/[\w-]+\.(jpg|png|webp)$/.test(pathname)) throw new Error("bad path");
 }
 
 /**
@@ -55,9 +55,11 @@ export async function POST(req: Request) {
   // On Vercel the disk is read-only: without a Blob store there is nowhere to put photos.
   if (process.env.VERCEL) return NextResponse.json({ error: "photo storage not configured (connect a Vercel Blob store)" }, { status: 503 });
   if (!(await currentUser())) return NextResponse.json({ error: "not signed in" }, { status: 401 });
-  const f = (await req.formData()).get("file");
+  const form = await req.formData();
+  const f = form.get("file");
+  const folder = form.get("folder") === "handovers" ? "handovers" : "cars";
   if (!(f instanceof File) || !isValidPhoto(f)) return NextResponse.json({ error: "invalid photo" }, { status: 400 });
-  return NextResponse.json({ url: await savePhotoLocally(f) });
+  return NextResponse.json({ url: await savePhotoLocally(f, folder) });
 }
 
 /**

@@ -80,6 +80,10 @@ const T = {
     ro: (i: TripInfo, url: string) => ({ s: `Cum a fost cu ${i.car}?`, h: "Cum a fost?", b: [{ p: `Închirierea ${i.car} (${i.when}) s-a încheiat. Lasă o recenzie pentru ${i.other}: ajută comunitatea să aibă încredere.` }], btn: { label: "Lasă o recenzie", url } }),
     en: (i: TripInfo, url: string) => ({ s: `How was the ${i.car}?`, h: "How did it go?", b: [{ p: `The trip in the ${i.car} (${i.when}) has ended. Leave a review for ${i.other}: it helps everyone trust each other.` }], btn: { label: "Leave a review", url } }),
   },
+  handover: {
+    ro: (i: TripInfo, stage: string, url: string) => ({ s: `Confirmă raportul de ${stage.toLowerCase()}: ${i.car}`, h: `Raport de ${stage.toLowerCase()} de confirmat`, b: [{ p: `${i.other} a completat raportul de ${stage.toLowerCase()} pentru ${i.car}, cu poze, kilometri și nivelul combustibilului. Verifică-l și confirmă-l sau semnalează o diferență.` }], btn: { label: "Verifică raportul", url }, after: "Ai 7 zile să răspunzi." }),
+    en: (i: TripInfo, stage: string, url: string) => ({ s: `Please confirm the ${stage.toLowerCase()} report: ${i.car}`, h: `${stage} report to confirm`, b: [{ p: `${i.other} filled in the ${stage.toLowerCase()} report for the ${i.car}, with photos, kilometres and fuel level. Check it, then confirm it or report a difference.` }], btn: { label: "Check the report", url }, after: "You have 7 days to answer." }),
+  },
   reset: {
     ro: (url: string) => ({ s: "Resetează-ți parola Carlala", h: "Resetează-ți parola", b: [{ p: "Cineva (sperăm că tu) a cerut o parolă nouă pentru contul tău Carlala. Linkul este valabil o oră și poate fi folosit o singură dată." }], btn: { label: "Alege o parolă nouă", url }, after: "Dacă nu ai cerut tu, ignoră acest email: parola ta rămâne neschimbată." }),
     en: (url: string) => ({ s: "Reset your Carlala password", h: "Reset your password", b: [{ p: "Someone (hopefully you) asked for a new password for your Carlala account. The link works for one hour and only once." }], btn: { label: "Choose a new password", url }, after: "If this wasn't you, ignore this email: your password stays the same." }),
@@ -105,4 +109,5 @@ export const emails = {
   paidOwner: (l: Locale, i: TripInfo, url: string) => render(l, T.paidOwner[l](safe(i), url)),
   review: (l: Locale, i: TripInfo, url: string) => render(l, T.review[l](safe(i), url)),
   reset: (l: Locale, url: string) => render(l, T.reset[l](url)),
+  handover: (l: Locale, i: TripInfo, stage: string, url: string) => render(l, T.handover[l](safe(i), esc(stage), url)),
 };

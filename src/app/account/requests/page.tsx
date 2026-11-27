@@ -19,7 +19,7 @@ export default async function Requests({ searchParams }: { searchParams: Promise
   const bookings = await db.booking.findMany({
     where: { car: { ownerId: user.id } },
     orderBy: [{ status: "asc" }, { start: "asc" }],
-    include: { car: true, renter: true, reviews: true },
+    include: { car: true, renter: true, reviews: true, handovers: true },
   });
   const now = new Date();
   return (
@@ -50,6 +50,11 @@ export default async function Requests({ searchParams }: { searchParams: Promise
                   )}
                   {(b.status === "REQUESTED" || b.status === "ACCEPTED") && (
                     <form action={declineBooking}><input type="hidden" name="id" value={b.id} /><button className="btn-ghost btn-sm">{t.requests.decline}</button></form>
+                  )}
+                  {(b.status === "PAID" || b.status === "COMPLETED") && (
+                    <Link href={`/bookings/${b.id}/handover`} className="btn-ghost btn-sm">
+                      {t.handover.button}{b.handovers.some((x) => x.submittedById !== user.id && !x.confirmedAt && !x.objectionAt) && <span className="pill ml-1 bg-coral">{t.handover.needsYou}</span>}
+                    </Link>
                   )}
                   {b.status === "PAID" && b.start <= now && (
                     <form action={completeBooking}><input type="hidden" name="id" value={b.id} /><button className="btn-ghost btn-sm">{t.requests.complete}</button></form>

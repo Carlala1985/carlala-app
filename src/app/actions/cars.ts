@@ -9,7 +9,7 @@ import { isOurPhotoUrl, MAX_PHOTOS } from "@/lib/uploads";
 import { removePhotoFiles } from "@/lib/deletion";
 import { toBani } from "@/lib/money";
 
-export type CarFormState = { error?: string } | undefined;
+export type CarFormState = { error?: string; values?: Record<string, string> } | undefined;
 
 const nextYear = new Date().getFullYear() + 1;
 const schema = z.object({
@@ -29,18 +29,19 @@ const schema = z.object({
 export async function saveCar(_: CarFormState, formData: FormData): Promise<CarFormState> {
   const user = await requireUser();
   const id = String(formData.get("id") ?? "") || null;
+  const typed = Object.fromEntries([...formData.entries()].filter(([k, v]) => typeof v === "string" && !k.startsWith("$")).map(([k, v]) => [k, String(v)]));
   const parsed = schema.safeParse(Object.fromEntries(formData));
   if (!parsed.success) {
     const msg = parsed.error.issues[0].message;
-    return { error: msg.startsWith("err") ? msg : "errRequired" };
+    return { error: msg.startsWith("err") ? msg : "errRequired", values: typed };
   }
   const d = parsed.data;
-  if (d.pricePerDay < d.pricePerHour) return { error: "errDayPrice" };
+  if (d.pricePerDay < d.pricePerHour) return { error: "errDayPrice", values: typed };
 
   let photoUrls: string[] = [];
   try {
     const raw: unknown = JSON.parse(String(formData.get("photoUrls") ?? "[]"));
-    photoUrls = Array.isArray(raw) ? raw.filter(isOurPhotoUrl) : [];
+    photoUrls = Array.isArray(raw) ? raw.filter((u): u is string => isOurPhotoUrl(u, "cars")) : [];
   } catch {
     photoUrls = [];
   }

@@ -61,3 +61,33 @@ export async function notifyWelcome(user: { email: string; name: string; locale:
   const l = loc(user.locale);
   await sendEmail({ to: user.email, toName: user.name, tag: "welcome", ...emails.welcome(l, first(user.name), `${appUrl()}/cars`) });
 }
+
+/** Asks the other side of a hand-over report to confirm it; tells admins about disputes. */
+export async function notifyHandover(handoverId: string, kind: "submitted" | "disputed") {
+  try {
+    const h = await db.handover.findUnique({ where: { id: handoverId }, include: { booking: { include: { renter: true, car: { include: { owner: true } } } } } });
+    if (!h) return;
+    const b = h.booking, owner = b.car.owner, renter = b.renter;
+    const url = `${appUrl()}/bookings/${b.id}/handover`;
+    if (kind === "submitted") {
+      const submitter = h.submittedById === owner.id ? owner : renter;
+      const other = submitter.id === owner.id ? renter : owner;
+      const l = loc(other.locale);
+      const stage = h.stage === "PICKUP" ? (l === "ro" ? "Preluare" : "Pick-up") : (l === "ro" ? "Returnare" : "Return");
+      const info: TripInfo = { car: `${b.car.make} ${b.car.model}`, when: `${formatDateTime(b.start, l)} → ${formatDateTime(b.end, l)}`, area: b.car.neighbourhood, total: formatRon(b.totalPrice, l), other: first(submitter.name) };
+      await sendEmail({ to: other.email, toName: other.name, tag: "handover", ...emails.handover(l, info, stage, url) });
+    } else {
+      const admins = (process.env.ADMIN_EMAILS ?? "").split(",").map((e) => e.trim()).filter(Boolean);
+      for (const to of admins) {
+        await sendEmail({
+          to, tag: "handover-dispute",
+          subject: `Disputed ${h.stage.toLowerCase()} report: ${b.car.make} ${b.car.model}`,
+          html: `<p>The ${h.stage.toLowerCase()} report for booking ${b.id} was disputed.</p><p><a href="${url}">Open the hand-over</a></p>`,
+          text: `The ${h.stage.toLowerCase()} report for booking ${b.id} was disputed.\n${url}`,
+        });
+      }
+    }
+  } catch (e) {
+    console.error(`notify handover ${handoverId} failed:`, (e as Error).message);
+  }
+}

@@ -133,7 +133,8 @@ model Booking {
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
-  reviews Review[]
+  reviews   Review[]
+  handovers Handover[]
 
   @@index([carId, start, end])
   @@index([renterId])
@@ -178,4 +179,42 @@ model AvailabilityException {
   hours Int[]
 
   @@unique([carId, date])
+}
+
+enum HandoverStage {
+  PICKUP
+  RETURN
+}
+
+/**
+ * Condition report at pick-up or return: evidence for damage disputes.
+ * Submitted once by either side, then confirmed (or disputed) by the other. Never edited.
+ */
+model Handover {
+  id            String          @id @default(cuid())
+  bookingId     String
+  booking       Booking         @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  stage         HandoverStage
+  submittedById String
+  odometerKm    Int
+  fuelPercent   Int // fuel or battery level, 0-100
+  notes         String          @default("")
+  createdAt     DateTime        @default(now())
+  confirmedById String?
+  confirmedAt   DateTime?
+  objection     String? // the other side disagrees: shown to admins
+  objectionAt   DateTime?
+  photos        HandoverPhoto[]
+
+  @@unique([bookingId, stage])
+}
+
+model HandoverPhoto {
+  id           String   @id @default(cuid())
+  handoverId   String
+  handover     Handover @relation(fields: [handoverId], references: [id], onDelete: Cascade)
+  slot         String // FRONT, BACK, LEFT, RIGHT, DASHBOARD, EXTRA
+  url          String
+  uploadedById String
+  createdAt    DateTime @default(now())
 }

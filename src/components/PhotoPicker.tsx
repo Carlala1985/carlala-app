@@ -2,10 +2,9 @@
 import { useState } from "react";
 import { upload, uploadPresigned } from "@vercel/blob/client";
 
-const MAX_SIDE = 1600;
 
 /** Shrinks a photo in the browser (max 1600 px, JPEG) so phone photos upload fast and stay small. */
-async function shrink(file: File): Promise<Blob> {
+async function shrink(file: File, MAX_SIDE: number): Promise<Blob> {
   try {
     const bmp = await createImageBitmap(file);
     const scale = Math.min(1, MAX_SIDE / Math.max(bmp.width, bmp.height));
@@ -23,8 +22,9 @@ async function shrink(file: File): Promise<Blob> {
 
 type Item = { key: string; preview: string; url?: string; failed?: boolean };
 
-export function PhotoPicker({ max, mode, labels, onBusyChange }: {
+export function PhotoPicker({ max, mode, labels, onBusyChange, name = "photoUrls", folder = "cars", maxSide = 1600, label, hint, id = "photo-picker" }: {
   max: number; mode: "token" | "oidc" | "none"; labels: Record<string, string>; onBusyChange: (busy: boolean) => void;
+  name?: string; folder?: "cars" | "handovers"; maxSide?: number; label?: string; hint?: string; id?: string;
 }) {
   const [items, setItems] = useState<Item[]>([]);
   const [error, setError] = useState("");
@@ -41,14 +41,15 @@ export function PhotoPicker({ max, mode, labels, onBusyChange }: {
     await Promise.all(files.map(async (f, i) => {
       const key = added[i].key;
       try {
-        const blob = await shrink(f);
+        const blob = await shrink(f, maxSide);
         let url: string;
         if (mode !== "none") {
           const send = mode === "oidc" ? uploadPresigned : upload;
-          url = (await send(`cars/${key}.jpg`, blob, { access: "public", handleUploadUrl: "/api/upload", contentType: blob.type || "image/jpeg" })).url;
+          url = (await send(`${folder}/${key}.jpg`, blob, { access: "public", handleUploadUrl: "/api/upload", contentType: blob.type || "image/jpeg" })).url;
         } else {
           const fd = new FormData();
           fd.append("file", new File([blob], `${key}.jpg`, { type: blob.type || "image/jpeg" }));
+          fd.append("folder", folder);
           const res = await fetch("/api/upload", { method: "POST", body: fd });
           if (!res.ok) throw new Error(String(res.status));
           url = (await res.json()).url;
@@ -65,8 +66,8 @@ export function PhotoPicker({ max, mode, labels, onBusyChange }: {
   const urls = items.filter((i) => i.url).map((i) => i.url!);
   return (
     <div>
-      <label className="label" htmlFor="photo-picker">{labels.photos}</label>
-      <input type="hidden" name="photoUrls" value={JSON.stringify(urls)} />
+      <label className="label" htmlFor={id}>{label ?? labels.photos}</label>
+      <input type="hidden" name={name} value={JSON.stringify(urls)} />
       {items.length > 0 && (
         <ul className="mb-3 grid grid-cols-3 gap-2 sm:grid-cols-6">
           {items.map((it) => (
@@ -79,10 +80,10 @@ export function PhotoPicker({ max, mode, labels, onBusyChange }: {
         </ul>
       )}
       {room > 0 && (
-        <input id="photo-picker" type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={onPick}
+        <input id={id} type="file" accept="image/jpeg,image/png,image/webp" multiple onChange={onPick}
           className="input file:mr-3 file:rounded-full file:border-0 file:bg-ink file:px-4 file:py-2 file:text-blush" />
       )}
-      <p className="hint">{labels.photosHint}</p>
+      {(hint ?? labels.photosHint) && <p className="hint">{hint ?? labels.photosHint}</p>}
       {error && <p className="alert-err mt-2" role="alert">{error}</p>}
     </div>
   );
