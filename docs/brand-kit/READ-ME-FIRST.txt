@@ -1,0 +1,35 @@
+CARLALA BRAND KIT (v1, November 2026)
+=====================================
+Full rules: Carlala-brand-guide.pdf
+
+Colours:  Coral #FF6A4D · Plum #24163A · Blush #FFF4EF · Peach #FFDED3 · Lilac #EBE3FB · Grey plum #675A74
+Font:     Bricolage Grotesque (free, Google Fonts). Fallback: Arial.
+Taglines: EN "The car next door, by the hour."  RO "Mașina de lângă tine, cu ora."
+
+WHICH FILE WHERE
+- Stripe (Settings > Business > Branding):
+    Icon  -> icon/png/carlala-icon-square-512.png
+    Logo  -> logo/png/carlala-logo-1200px.png
+    Brand colour #FF6A4D, accent colour #24163A
+- Brevo (sender logo / email templates):
+    Logo   -> email/email-logo-600x216-white-bg.png
+    Header -> email/email-header-1200x300.png (display it 600 px wide)
+- Profile picture (Facebook, Instagram, LinkedIn, X, Google, WhatsApp Business):
+    icon/png/carlala-icon-square-800.png   (safe for round crops)
+- Facebook cover:   social/facebook-cover-1640x624.png
+- LinkedIn banner:  social/linkedin-banner-1584x396.png
+- X (Twitter):      social/x-twitter-header-1500x500.png
+- Google Business:  logo icon/png/carlala-icon-square-800.png, cover social/google-business-cover-1024x576.png
+- Instagram post:   social/instagram-post-1080.png
+- Link preview image (websites, WhatsApp shares): social/og-image-1200x630.png
+- Website favicon:  favicon/ (favicon.ico, icon.svg, apple-touch-icon.png, icon-192.png, icon-512.png)
+- Print, stickers, signage, car wrap: the .svg files in logo/svg (vector, any size)
+- Word / PowerPoint / documents: logo/png/carlala-logo-1200px.png (transparent)
+
+FOLDERS
+logo/svg   vector masters (text converted to shapes: no font needed)
+logo/png   transparent PNGs at 600/1200/2400 px wide, plus versions on blush and plum
+icon/      app icon: rounded (coral), square (coral, round-crop safe), plum
+social/    ready-made banners and covers
+email/     email header and logo
+favicon/   website icons
