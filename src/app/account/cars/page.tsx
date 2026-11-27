@@ -45,6 +45,7 @@ export default async function MyCars({ searchParams }: { searchParams: Promise<{
               <div className="flex flex-wrap items-start gap-2 px-5 pb-5 sm:pl-0">
                 <Link href={`/cars/${c.id}`} className="btn-ghost btn-sm">{t.myCars.view}</Link>
                 <Link href={`/account/cars/${c.id}/edit`} className="btn-ghost btn-sm">{t.myCars.edit}</Link>
+                <Link href={`/account/cars/${c.id}/availability`} className="btn-ghost btn-sm">{t.agenda.edit}</Link>
                 <form action={toggleCarActive}><input type="hidden" name="id" value={c.id} />
                   <button className="btn-ghost btn-sm">{c.active ? t.myCars.pause : t.myCars.resume}</button></form>
                 <ConfirmDelete action={deleteMyCar} fields={{ id: c.id }} cta={t.myCars.delete} text={t.myCars.deleteText} confirm={t.myCars.deleteConfirm} />

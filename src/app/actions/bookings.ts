@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { getLocale } from "@/lib/i18n";
-import { publicCar } from "@/lib/cars";
+import { fitsAgenda, publicCar } from "@/lib/cars";
 import { quote, validateRange } from "@/lib/pricing";
 import { parseLocal } from "@/lib/time";
 import { hasConflict, markPaid, onTripFinished } from "@/lib/bookings";
@@ -25,6 +25,7 @@ export async function requestBooking(formData: FormData) {
   if (!start || !end) redirect(back(carId, startRaw, endRaw, "error=dates"));
   const err = validateRange(start, end);
   if (err) redirect(back(carId, startRaw, endRaw, `error=${err}`));
+  if (!(await fitsAgenda(car, start, end))) redirect(back(carId, startRaw, endRaw, "error=outside_agenda"));
   if (await hasConflict(carId, start, end)) redirect(back(carId, startRaw, endRaw, "error=unavailable"));
   const q = quote(start, end, car.pricePerHour, car.pricePerDay);
   const booking = await db.booking.create({

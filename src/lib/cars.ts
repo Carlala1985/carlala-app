@@ -1,5 +1,6 @@
 import type { BookingStatus, Fuel, Prisma, Sector, Transmission } from "@prisma/client";
 import { db } from "./db";
+import { datesTouched, isAvailable, type Exceptions } from "./availability";
 
 export const SECTORS: Sector[] = ["S1", "S2", "S3", "S4", "S5", "S6", "ILFOV"];
 export const TRANSMISSIONS: Transmission[] = ["MANUAL", "AUTOMATIC"];
@@ -25,10 +26,33 @@ export async function searchCars(p: SearchParams, take = 60) {
   if (p.start && p.end) {
     where.bookings = { none: { status: { in: BLOCKING }, start: { lt: p.end }, end: { gt: p.start } } };
   }
-  return db.car.findMany({
-    where, take, orderBy: { createdAt: "desc" },
+  const cars = await db.car.findMany({
+    where, take: p.start && p.end ? take * 3 : take, orderBy: { createdAt: "desc" },
     include: { photos: { orderBy: { position: "asc" }, take: 1 } },
   });
+  if (!(p.start && p.end)) return cars;
+  // Cars with an agenda are only shown when every requested hour is coloured as available.
+  const ex = await loadExceptions(cars.filter((c) => c.hasAgenda).map((c) => c.id), p.start, p.end);
+  return cars.filter((c) => isAvailable(c, ex.get(c.id) ?? new Map(), p.start!, p.end!)).slice(0, take);
+}
+
+/** Date exceptions per car for the days a time range touches. */
+export async function loadExceptions(carIds: string[], start: Date, end: Date) {
+  const out = new Map<string, Exceptions>();
+  if (!carIds.length) return out;
+  const rows = await db.availabilityException.findMany({ where: { carId: { in: carIds }, date: { in: datesTouched(start, end) } } });
+  for (const r of rows) {
+    if (!out.has(r.carId)) out.set(r.carId, new Map());
+    out.get(r.carId)!.set(r.date, r.hours);
+  }
+  return out;
+}
+
+/** True when the car's agenda allows the whole booking. */
+export async function fitsAgenda(car: { id: string; hasAgenda: boolean; weeklyHours: number[] }, start: Date, end: Date) {
+  if (!car.hasAgenda) return true;
+  const ex = await loadExceptions([car.id], start, end);
+  return isAvailable(car, ex.get(car.id) ?? new Map(), start, end);
 }
 
 /** Average rating an owner received, with count. */

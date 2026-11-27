@@ -11,6 +11,9 @@ import { CarImage } from "@/components/CarCard";
 import { Stars } from "@/components/Stars";
 import { requestBooking } from "@/app/actions/bookings";
 import { displayName } from "@/lib/deletion";
+import { AgendaGrid } from "@/components/AgendaGrid";
+import { agendaDays, todayLocal } from "@/lib/agendaView";
+import { addDays } from "@/lib/availability";
 
 type Q = { start?: string; end?: string; error?: string };
 
@@ -40,6 +43,8 @@ export default async function CarPage({ params, searchParams }: { params: Promis
     ownerRating(car.ownerId),
     db.review.findMany({ where: { subjectId: car.ownerId, booking: { carId: car.id } }, include: { author: true }, orderBy: { createdAt: "desc" }, take: 10 }),
   ]);
+  const today = todayLocal();
+  const agenda = car.hasAgenda ? await agendaDays(car, Array.from({ length: 7 }, (_, i) => addDays(today, i)), locale, t.agenda.days.split(","), today) : null;
   const since = new Intl.DateTimeFormat(locale === "ro" ? "ro-RO" : "en-GB", { month: "long", year: "numeric" }).format(car.owner.createdAt);
 
   return (
@@ -65,6 +70,12 @@ export default async function CarPage({ params, searchParams }: { params: Promis
         {car.description && (
           <section><h2 className="mb-2 text-2xl font-bold">{t.car.about}</h2><p className="whitespace-pre-line text-muted">{car.description}</p></section>
         )}
+        <section>
+          <h2 className="mb-3 text-2xl font-bold">{t.agenda.carTitle}</h2>
+          {agenda ? <AgendaGrid columns={agenda.columns} initial={agenda.initial} booked={agenda.booked} readOnly
+              labels={{ available: t.agenda.available, unavailable: t.agenda.unavailable, booked: t.agenda.booked, hoursPerWeek: "" }} />
+            : <p className="text-muted">{t.agenda.anyTime}</p>}
+        </section>
         <section className="card flex items-center gap-4 p-5">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-lilac text-lg font-extrabold">{car.owner.name.slice(0, 1)}</span>
           <div className="min-w-0">

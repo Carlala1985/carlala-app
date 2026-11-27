@@ -87,10 +87,15 @@ model Car {
   active        Boolean      @default(true) // owner can pause the listing
   blocked       Boolean      @default(false) // admin can hide the listing
   deletedAt     DateTime? // listing deleted: hidden everywhere, photos removed, row kept for bookings history
+  /// Availability agenda (Bucharest time). Off until the owner first saves one: then only coloured hours are bookable.
+  hasAgenda     Boolean      @default(false)
+  /// Typical week: available hours as hour-of-week indices, Monday 00:00 = 0 ... Sunday 23:00 = 167.
+  weeklyHours   Int[]        @default([])
   createdAt     DateTime     @default(now())
 
   photos   CarPhoto[]
   bookings Booking[]
+  availabilityExceptions AvailabilityException[]
 
   @@index([sector, active, blocked])
 }
@@ -160,4 +165,17 @@ model PasswordResetToken {
   createdAt DateTime  @default(now())
 
   @@index([userId, createdAt])
+}
+
+/** A specific date where the owner's availability differs from the typical week. */
+model AvailabilityException {
+  id    String @id @default(cuid())
+  carId String
+  car   Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+  /// Local Bucharest date, "YYYY-MM-DD".
+  date  String
+  /// Available hours that day (0-23). Empty = the whole day is unavailable.
+  hours Int[]
+
+  @@unique([carId, date])
 }

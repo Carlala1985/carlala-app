@@ -57,6 +57,19 @@ const en = {
     history: "Payouts for finished trips", simulated: "Paid with the test simulator: no payout", processing: "Payout being processed", noHistory: "No payouts yet.", paid: "Paid out", waiting: "Waiting for your payout setup", returned: "Back from Stripe. Your details are being checked.",
     needed: "Set up payouts before accepting requests, so we can pay you.", error: "We couldn't reach Stripe. Try again in a minute.",
   },
+  agenda: {
+    title: "Availability", intro: "Colour the hours when renters can book your car. Hours left white can't be booked.",
+    tabWeek: "Typical week", tabDates: "Specific dates",
+    weekHint: "Colour a normal week once. It repeats every week, unless you change a specific date.",
+    datesHint: "Change the availability of particular dates. Days you've changed are marked with a dot; booked hours are shown in dark and can't be changed.",
+    available: "Available", unavailable: "Not available", booked: "Booked", hoursPerWeek: "{n} hours available",
+    save: "Save availability", saved: "Availability saved.", resetWeek: "Use the typical week for these 7 days",
+    prev: "Previous week", next: "Next week", presetDays: "Every day 08–20", presetWeekends: "Weekends", presetEvenings: "Weekday evenings + weekends", presetAll: "Always", presetNone: "Clear all",
+    off: "This car has no agenda yet, so renters can request it at any time. Save an agenda to limit bookings to the hours you choose.",
+    stop: "Stop using the agenda", stopped: "Agenda turned off: the car can be requested at any time.",
+    carTitle: "Availability this week", anyTime: "The owner accepts requests at any time.", edit: "Availability",
+    days: "Mon,Tue,Wed,Thu,Fri,Sat,Sun",
+  },
   myCars: {
     title: "My cars", add: "Add a car", empty: "You haven't listed a car yet.", emptyHint: "List your car and start earning when it's parked.",
     edit: "Edit", pause: "Pause listing", resume: "Show listing", paused: "Paused", live: "Live", blocked: "Hidden by Carlala",
@@ -105,7 +118,7 @@ const en = {
   errors: {
     end_before_start: "The return time must be after the pick-up time.", too_short: "The minimum rental is 1 hour.",
     too_long: "The maximum rental is 30 days.", in_past: "The pick-up time is in the past.", unavailable: "The car is already booked for part of this time.",
-    generic: "Something went wrong. Try again.", forbidden: "You can't do that.", dates: "Choose a pick-up and a return time.",
+    generic: "Something went wrong. Try again.", outside_agenda: "The owner hasn't made the car available for all of these hours. Check the availability below.", forbidden: "You can't do that.", dates: "Choose a pick-up and a return time.",
   },
   footer: { tagline: "The car next door, by the hour.", privacy: "Privacy", cookies: "Cookies", contact: "hello@carlala.eu", company: "GUFFROY SRL · CUI 51319110" },
   sectors: { S1: "Sector 1", S2: "Sector 2", S3: "Sector 3", S4: "Sector 4", S5: "Sector 5", S6: "Sector 6", ILFOV: "Ilfov" },

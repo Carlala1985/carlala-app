@@ -59,6 +59,19 @@ const ro: Dict = {
     history: "Plăți pentru închirieri încheiate", simulated: "Plătit cu simulatorul de test: fără plată", processing: "Plata este în curs", noHistory: "Încă nu ai primit plăți.", paid: "Plătit", waiting: "Așteaptă activarea încasărilor", returned: "Te-ai întors de pe Stripe. Datele tale sunt verificate.",
     needed: "Activează încasările înainte să accepți cereri, ca să te putem plăti.", error: "Nu am putut contacta Stripe. Încearcă din nou peste un minut.",
   },
+  agenda: {
+    title: "Disponibilitate", intro: "Colorează orele în care mașina poate fi rezervată. Orele lăsate albe nu pot fi rezervate.",
+    tabWeek: "Săptămâna obișnuită", tabDates: "Date anume",
+    weekHint: "Colorează o dată o săptămână obișnuită. Se repetă în fiecare săptămână, cu excepția datelor pe care le modifici.",
+    datesHint: "Schimbă disponibilitatea pentru anumite zile. Zilele modificate au un punct; orele rezervate apar închise la culoare și nu pot fi schimbate.",
+    available: "Disponibil", unavailable: "Indisponibil", booked: "Rezervat", hoursPerWeek: "{n} ore disponibile",
+    save: "Salvează disponibilitatea", saved: "Disponibilitatea a fost salvată.", resetWeek: "Folosește săptămâna obișnuită pentru aceste 7 zile",
+    prev: "Săptămâna anterioară", next: "Săptămâna următoare", presetDays: "Zilnic 08–20", presetWeekends: "Weekenduri", presetEvenings: "Serile din timpul săptămânii + weekend", presetAll: "Mereu", presetNone: "Șterge tot",
+    off: "Mașina nu are încă un program, așa că poate fi cerută oricând. Salvează un program ca să permiți rezervări doar în orele alese de tine.",
+    stop: "Nu mai folosi programul", stopped: "Programul a fost dezactivat: mașina poate fi cerută oricând.",
+    carTitle: "Disponibilitate săptămâna aceasta", anyTime: "Proprietarul acceptă cereri oricând.", edit: "Disponibilitate",
+    days: "Lun,Mar,Mie,Joi,Vin,Sâm,Dum",
+  },
   myCars: {
     title: "Mașinile mele", add: "Adaugă o mașină", empty: "Încă nu ai listat nicio mașină.", emptyHint: "Listează-ți mașina și câștigă cât stă parcată.",
     edit: "Modifică", pause: "Pune pe pauză", resume: "Afișează anunțul", paused: "Pe pauză", live: "Activ", blocked: "Ascuns de Carlala",
@@ -107,7 +120,7 @@ const ro: Dict = {
   errors: {
     end_before_start: "Ora de returnare trebuie să fie după ora de preluare.", too_short: "Închirierea minimă este de 1 oră.",
     too_long: "Închirierea maximă este de 30 de zile.", in_past: "Ora de preluare este în trecut.", unavailable: "Mașina este deja rezervată pentru o parte din acest interval.",
-    generic: "Ceva nu a mers. Încearcă din nou.", forbidden: "Nu poți face asta.", dates: "Alege ora de preluare și de returnare.",
+    generic: "Ceva nu a mers. Încearcă din nou.", outside_agenda: "Proprietarul nu a făcut mașina disponibilă pentru toate aceste ore. Verifică disponibilitatea de mai jos.", forbidden: "Nu poți face asta.", dates: "Alege ora de preluare și de returnare.",
   },
   footer: { tagline: "Mașina de lângă tine, cu ora.", privacy: "Confidențialitate", cookies: "Cookie-uri", contact: "hello@carlala.eu", company: "GUFFROY SRL · CUI 51319110" },
   sectors: { S1: "Sector 1", S2: "Sector 2", S3: "Sector 3", S4: "Sector 4", S5: "Sector 5", S6: "Sector 6", ILFOV: "Ilfov" },
