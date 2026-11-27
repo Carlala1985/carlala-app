@@ -30,7 +30,8 @@ export default async function Admin({ searchParams }: { searchParams: Promise<{ 
   const td = "px-4 py-3 align-top border-t border-line";
   return (
     <div className="wrap flex flex-col gap-10 py-10">
-      <h1 className="text-4xl font-extrabold">{t.admin.title}</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3"><h1 className="text-4xl font-extrabold">{t.admin.title}</h1>
+        <Link href="/admin/analytics" className="btn-ink">{t.admin.traffic}</Link></div>
       {deleted && <p className="alert-ok" role="status">{deleted === "car" ? t.admin.deletedCar : t.admin.deletedUser}</p>}
       {refunded && <p className="alert-ok" role="status">{t.admin.refundedOk}</p>}
       {error && <p className="alert-err" role="alert">{error === "refund" ? t.admin.refundFailed : error === "car_has_trips" ? t.admin.carHasTrips : t.admin.userHasTrips}</p>}

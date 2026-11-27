@@ -218,3 +218,29 @@ model HandoverPhoto {
   uploadedById String
   createdAt    DateTime @default(now())
 }
+
+/**
+ * Cookieless visit statistics for carlala.eu ("web") and app.carlala.eu ("app").
+ * No IP address is stored: "visitor" is a hash of IP + browser + a random salt that is
+ * replaced every day (AnalyticsSalt), so visitors can't be followed across days. Kept 13 months.
+ */
+model PageView {
+  id        String   @id @default(cuid())
+  site      String // "web" | "app"
+  path      String
+  referrer  String? // host only, external sites only
+  country   String? // ISO code from the hosting provider
+  device    String // "mobile" | "tablet" | "desktop"
+  lang      String?
+  visitor   String
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([site, createdAt])
+}
+
+/** Today's random salt for visitor hashes; older days are deleted, so old hashes can't be recomputed. */
+model AnalyticsSalt {
+  day  String @id // UTC date
+  salt String
+}

@@ -126,6 +126,11 @@ const ro: Dict = {
   },
   admin: {
     title: "Admin", users: "Utilizatori", cars: "Mașini", bookings: "Rezervări", revenue: "Comisioane Carlala (rezervări plătite)",
+    traffic: "Trafic", trafficIntro: "Vizitele pe carlala.eu și în aplicație, numărate fără cookie-uri. O vizită înseamnă un vizitator într-o zi.",
+    visits: "Vizite", pageViews: "Pagini vizualizate", perVisit: "Pagini pe vizită", daily: "Vizite pe zi", topPages: "Cele mai vizitate pagini", sources: "De unde vin vizitatorii",
+    countries: "Țări", devices: "Dispozitive", languages: "Limbi", noData: "Încă nu sunt vizite în această perioadă.", direct: "Direct sau necunoscut", unknown: "Necunoscut",
+    site_all: "Ambele site-uri", site_web: "carlala.eu", site_app: "Aplicația", days: "{n} zile", tableView: "Arată ca tabel", date: "Data",
+    mobile: "Telefon", tablet: "Tabletă", desktop: "Calculator", views: "vizualizări",
     deleteUser: "Șterge", deleteCar: "Șterge", confirm: "Da, șterge",
     payout: "Plată proprietar", paidOut: "Plătit", payoutPending: "Proprietar neactivat", refunded: "Rambursat", refund: "Rambursează", refundConfirm: "Da, rambursează integral",
     refundText: "Rambursează integral șoferul și anulează rezervarea. Nu se poate după ce proprietarul a fost plătit.", refundedOk: "Rambursare efectuată.", refundFailed: "Rambursarea nu a reușit. Verifică rezervarea în Stripe.",

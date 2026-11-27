@@ -124,6 +124,11 @@ const en = {
   },
   admin: {
     title: "Admin", users: "Users", cars: "Cars", bookings: "Bookings", revenue: "Carlala fees (paid trips)",
+    traffic: "Traffic", trafficIntro: "Visits to carlala.eu and the app, counted without cookies. A visit is one visitor on one day.",
+    visits: "Visits", pageViews: "Page views", perVisit: "Pages per visit", daily: "Visits per day", topPages: "Top pages", sources: "Where visitors come from",
+    countries: "Countries", devices: "Devices", languages: "Languages", noData: "No visits yet in this period.", direct: "Direct or unknown", unknown: "Unknown",
+    site_all: "Both sites", site_web: "carlala.eu", site_app: "App", days: "{n} days", tableView: "Show as a table", date: "Date",
+    mobile: "Phone", tablet: "Tablet", desktop: "Computer", views: "views",
     deleteUser: "Delete", deleteCar: "Delete", confirm: "Yes, delete",
     payout: "Payout", paidOut: "Paid out", payoutPending: "Owner not set up", refunded: "Refunded", refund: "Refund", refundConfirm: "Yes, refund in full",
     refundText: "Refunds the renter in full and cancels the trip. Not possible once the owner has been paid.", refundedOk: "Refund done.", refundFailed: "The refund didn't go through. Check the booking in Stripe.",

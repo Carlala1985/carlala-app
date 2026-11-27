@@ -7,6 +7,7 @@ import { currentUser } from "@/lib/session";
 import { Logo } from "@/components/Logo";
 import { setLocale } from "./actions/locale";
 import { logout } from "./actions/auth";
+import { Tracker } from "@/components/Tracker";
 
 // Self-hosted so no visitor data goes to Google (see carlala.eu/privacy.html).
 const bricolage = localFont({
@@ -64,6 +65,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             </div>
           </div>
         </header>
+        <Tracker />
         <main className="flex-1">{children}</main>
         <footer className="mt-20 border-t border-line">
           <div className="wrap flex flex-wrap items-start justify-between gap-6 py-10 text-[15px] text-muted">
