@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { db } from "@/lib/db";
 import { requireUser } from "@/lib/session";
 import { stripeEnabled } from "@/lib/payments";
-import { startCheck } from "@/lib/identity";
+import { identityEnabled, startCheck } from "@/lib/identity";
 import { canStartCheck } from "@/lib/driverRules";
 
 const safeNext = (v: FormDataEntryValue | null) => {
@@ -15,7 +15,7 @@ const safeNext = (v: FormDataEntryValue | null) => {
 export async function startDriverCheck(formData: FormData) {
   const user = await requireUser("/account/verify");
   const next = safeNext(formData.get("next"));
-  if (!stripeEnabled() || !canStartCheck(user)) redirect("/account/verify");
+  if (!identityEnabled() || !canStartCheck(user)) redirect("/account/verify");
   let url: string;
   try {
     url = await startCheck(user, next);

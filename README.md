@@ -71,6 +71,7 @@ npm test
    - `BREVO_API_KEY`: Brevo **API** key (starts with `xkeysib-`, not the SMTP key) for booking emails and password resets. Without it, emails are only written to the logs.
    - `ADMIN_EMAILS`: `hello@carlala.eu` (whoever signs up or logs in with this address becomes admin)
    - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`: optional at first (see below)
+   - `IDENTITY_ENABLED`: set to `1` to require driver checks with Stripe Identity (the Stripe key needs Identity Verification Results: Write). Off by default.
 3. **Photos.** In the Vercel project, **Storage → Create → Blob**, then connect it to the project. Vercel adds `BLOB_READ_WRITE_TOKEN` itself. Redeploy afterwards.
 4. **Deploy.** Each deployment creates or updates the database tables automatically (`prisma migrate deploy` runs in the build). The app runs in Frankfurt (`vercel.json`).
 5. **First admin.** Open the site and sign up with `hello@carlala.eu`; that account is the admin.

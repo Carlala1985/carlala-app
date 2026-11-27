@@ -11,6 +11,7 @@ import { hasConflict, markPaid, onTripFinished } from "@/lib/bookings";
 import { paymentUrl, stripeEnabled } from "@/lib/payments";
 import { notifyBooking } from "@/lib/notify";
 import { driverState } from "@/lib/driverRules";
+import { driverChecksRequired } from "@/lib/identity";
 
 const back = (carId: string, start: string, end: string, extra: string) =>
   `/cars/${carId}?start=${encodeURIComponent(start)}&end=${encodeURIComponent(end)}&${extra}`;
@@ -29,7 +30,7 @@ export async function requestBooking(formData: FormData) {
   if (!(await fitsAgenda(car, start, end))) redirect(back(carId, startRaw, endRaw, "error=outside_agenda"));
   if (await hasConflict(carId, start, end)) redirect(back(carId, startRaw, endRaw, "error=unavailable"));
   // Renters need a passed driver check, with the licence valid until the end of the trip.
-  const driver = driverState(user, end);
+  const driver = driverChecksRequired() ? driverState(user, end) : "ok";
   if (driver === "expired") redirect(back(carId, startRaw, endRaw, "error=licence_expired"));
   if (driver !== "ok") redirect(back(carId, startRaw, endRaw, "error=driver"));
   const q = quote(start, end, car.pricePerHour, car.pricePerDay);

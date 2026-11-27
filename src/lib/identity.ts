@@ -7,6 +7,13 @@ import { appUrl } from "./url";
 import { ageOn, MIN_DRIVER_AGE } from "./driverRules";
 
 /**
+ * Driver checks are required when Stripe Identity is switched on (IDENTITY_ENABLED=1, needs the
+ * Identity permission on the Stripe key), and always in local/simulator mode (no Stripe key).
+ */
+export const identityEnabled = () => stripeEnabled() && process.env.IDENTITY_ENABLED === "1";
+export const driverChecksRequired = () => !stripeEnabled() || identityEnabled();
+
+/**
  * Driver checks with Stripe Identity: the renter photographs their driving licence and takes a
  * live selfie on Stripe's hosted page. Stripe checks the licence is genuine and not expired, and
  * that the face matches. Carlala keeps only the result, the name on the licence, its expiry date
@@ -84,7 +91,7 @@ async function recordVerified(userId: string, session: Stripe.Identity.Verificat
 
 /** Pulls the latest state from Stripe (used when the renter comes back, in case the webhook is late). */
 export async function refreshCheck(user: User) {
-  if (!stripeEnabled() || !user.identitySessionId || user.driverStatus === "VERIFIED") return user;
+  if (!identityEnabled() || !user.identitySessionId || user.driverStatus === "VERIFIED") return user;
   const session = await stripe().identity.verificationSessions.retrieve(user.identitySessionId);
   return (await applySession(session)) ?? user;
 }

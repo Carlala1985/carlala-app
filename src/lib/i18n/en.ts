@@ -76,7 +76,7 @@ const en = {
       other: "The check didn't go through. Try again with clear, well-lit photos of your licence.",
     } as Record<string, string>,
     privacy: "How we use this data is explained in our privacy policy.",
-    simulator: "Online checks aren't switched on yet.", simulate: "Simulate a passed check (test)",
+    notYet: "Online licence checks will be switched on soon. Until then, you can book without one.", simulator: "Online checks aren't switched on yet.", simulate: "Simulate a passed check (test)",
     error: "We couldn't reach Stripe. Try again in a minute.",
     needed: "Check your driving licence before booking. It takes about 2 minutes.",
     expiresBeforeTrip: "Your driving licence expires before the end of this trip.",

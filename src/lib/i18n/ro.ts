@@ -78,7 +78,7 @@ const ro: Dict = {
       other: "Verificarea nu a reușit. Încearcă din nou cu poze clare, bine luminate, ale permisului.",
     } as Record<string, string>,
     privacy: "Cum folosim aceste date este explicat în politica de confidențialitate.",
-    simulator: "Verificarea online nu este încă activată.", simulate: "Simulează o verificare reușită (test)",
+    notYet: "Verificarea online a permisului va fi activată în curând. Până atunci, poți rezerva fără ea.", simulator: "Verificarea online nu este încă activată.", simulate: "Simulează o verificare reușită (test)",
     error: "Nu am putut contacta Stripe. Încearcă din nou peste un minut.",
     needed: "Verifică-ți permisul de conducere înainte de rezervare. Durează cam 2 minute.",
     expiresBeforeTrip: "Permisul tău de conducere expiră înainte de sfârșitul acestei călătorii.",

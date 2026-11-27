@@ -2,7 +2,7 @@ import Link from "next/link";
 import { getDict } from "@/lib/i18n";
 import { requireUser } from "@/lib/session";
 import { stripeEnabled } from "@/lib/payments";
-import { refreshCheck } from "@/lib/identity";
+import { identityEnabled, refreshCheck } from "@/lib/identity";
 import { driverState } from "@/lib/driverRules";
 import { simulateDriverCheck, startDriverCheck } from "@/app/actions/driver";
 
@@ -27,7 +27,8 @@ export default async function Verify({ searchParams }: { searchParams: Promise<Q
   const country = (c: string) => { try { return new Intl.DisplayNames([tag], { type: "region" }).of(c) ?? c; } catch { return c; } };
   const reason = user.driverError ? d.reasons[user.driverError] ?? d.reasons.other : d.reasons.other;
   const tone = state === "ok" ? "alert-ok" : state === "none" || state === "processing" ? "alert-info" : "alert-err";
-  const message = { ok: d.verified, none: d.none, processing: d.processing, retry: `${d.failed} ${reason}`, expired: d.expired }[state];
+  const off = stripeEnabled() && !identityEnabled(); // Stripe on, Identity not switched on yet
+  const message = off && state !== "ok" ? d.notYet : { ok: d.verified, none: d.none, processing: d.processing, retry: `${d.failed} ${reason}`, expired: d.expired }[state];
   const row = (label: string, value: string) => (
     <div className="flex flex-wrap justify-between gap-x-6 gap-y-1 border-t border-line py-3 first:border-t-0">
       <dt className="text-muted">{label}</dt><dd className="min-w-0 break-words font-semibold">{value}</dd>
@@ -49,12 +50,12 @@ export default async function Verify({ searchParams }: { searchParams: Promise<Q
           </dl>
         )}
         {state === "ok" && next && <Link href={next} className="btn-coral">{t.common.continue}</Link>}
-        {state !== "ok" && state !== "processing" && (stripeEnabled() ? (
+        {state !== "ok" && state !== "processing" && (identityEnabled() ? (
           <form action={startDriverCheck}>
             <input type="hidden" name="next" value={next} />
             <button className="btn-coral">{state === "none" ? d.start : d.retry}</button>
           </form>
-        ) : (
+        ) : !stripeEnabled() && (
           <form action={simulateDriverCheck} className="flex flex-col items-start gap-2">
             <input type="hidden" name="next" value={next} />
             <p className="text-sm text-muted">{d.simulator}</p>
